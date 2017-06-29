@@ -14,6 +14,30 @@ class Car {
     context.fillStyle = 'black'
     context.fillRect($canvas.width / 2, $canvas.height / 2, 10, 20)
   }
+
+  turn(direction) {
+    this.direction = direction
+  }
+
+  accelerate(amount) {
+    this.speed += amount
+  }
+
+  move() {
+    switch (this.direction) {
+      case 'up':
+        this.location[1] -= this.speed
+        break
+      case 'right':
+        this.location[0] += this.speed
+        break
+      case 'down':
+        this.location[1] += this.speed
+        break
+      case 'left':
+        this.location[0] -= this.speed
+    }
+  }
 }
 
 window.addEventListener('load', function (event) {
