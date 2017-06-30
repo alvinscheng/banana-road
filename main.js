@@ -6,6 +6,8 @@ let moving = false
 let carRunning
 const mario = new Image()
 mario.src = 'images/mario-straight.png'
+const background = new Image()
+background.src = 'images/bg.jpg'
 
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
