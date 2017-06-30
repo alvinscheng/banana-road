@@ -73,24 +73,28 @@ window.addEventListener('load', () => {
 window.addEventListener('keydown', function (event) {
   switch (event.keyCode) {
     case 37:
+      user.turn('left')
       if (!moving) {
         moving = true
         Car.start(user)
       }
       break
     case 38:
+      user.turn('up')
       if (!moving) {
         moving = true
         Car.start(user)
       }
       break
     case 39:
+      user.turn('right')
       if (!moving) {
         moving = true
         Car.start(user)
       }
       break
     case 40:
+      user.turn('down')
       if (!moving) {
         moving = true
         Car.start(user)
