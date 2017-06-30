@@ -4,6 +4,8 @@ const cw = $canvas.width
 const ch = $canvas.height
 let moving = false
 let carRunning
+const mario = new Image()
+mario.src = 'images/mario-straight.png'
 
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
@@ -16,19 +18,19 @@ class Car {
     this.speed = 2
     this.x = cw / 2
     this.y = ch - 100
-    this.w = 25
-    this.h = 50
-    this.angle = 0
   }
 
   render() {
-    ctx.save()
-    ctx.translate(this.x + (this.w / 2), this.y + (this.h / 2))
-    ctx.rotate(this.angle)
-    ctx.translate(-(this.x + (this.w / 2)), -(this.y + (this.h / 2)))
-    ctx.fillStyle = 'black'
-    ctx.fillRect(this.x, this.y, this.w, this.h)
-    ctx.restore()
+    if (this.direction === 'left') {
+      mario.src = 'images/mario-left.png'
+    }
+    else if (this.direction === 'right') {
+      mario.src = 'images/mario-right.png'
+    }
+    else {
+      mario.src = 'images/mario-straight.png'
+    }
+    ctx.drawImage(mario, this.x, this.y)
   }
 
   turn(direction) {
@@ -46,19 +48,15 @@ class Car {
     switch (this.direction) {
       case 'up':
         this.y -= this.speed
-        this.angle = 0
         break
       case 'right':
         this.x += this.speed
-        this.angle = 3 * Math.PI / 2
         break
       case 'down':
         this.y += this.speed
-        this.angle = Math.PI
         break
       case 'left':
         this.x -= this.speed
-        this.angle = Math.PI / 2
     }
 
     this.render()
