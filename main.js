@@ -2,6 +2,7 @@ const $canvas = document.querySelector('#canvas')
 const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
+let moving
 
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
@@ -51,9 +52,13 @@ class Car {
   }
 
   static start(car) {
-    setInterval(function () {
+    moving = setInterval(function () {
       car.move()
     }, 16)
+  }
+
+  static stop(car) {
+    clearInterval(moving)
   }
 }
 
