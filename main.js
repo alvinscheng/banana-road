@@ -1,18 +1,24 @@
 const $canvas = document.querySelector('#canvas')
-const context = $canvas.getContext('2d')
-context.fillStyle = '#ecf0f1'
-context.fillRect(10, 10, $canvas.width, $canvas.height)
+const ctx = $canvas.getContext('2d')
+const cw = $canvas.width
+const ch = $canvas.height
+
+function renderCanvas() {
+  ctx.fillStyle = '#ecf0f1'
+  ctx.fillRect(0, 0, cw, ch)
+}
 
 class Car {
-  constructor(direction, speed, location) {
+  constructor(direction, speed) {
     this.direction = direction
     this.speed = speed
-    this.location = location
+    this.x = cw / 2
+    this.y = ch - 100
   }
 
   render() {
-    context.fillStyle = 'black'
-    context.fillRect($canvas.width / 2, $canvas.height / 2, 10, 20)
+    ctx.fillStyle = 'black'
+    ctx.fillRect(this.x, this.y, 10, 20)
   }
 
   turn(direction) {
@@ -24,23 +30,42 @@ class Car {
   }
 
   move() {
+    ctx.clearRect(0, 0, cw, ch)
+
     switch (this.direction) {
       case 'up':
-        this.location[1] -= this.speed
+        this.y -= this.speed
         break
       case 'right':
-        this.location[0] += this.speed
+        this.x += this.speed
         break
       case 'down':
-        this.location[1] += this.speed
+        this.y += this.speed
         break
       case 'left':
-        this.location[0] -= this.speed
+        this.x -= this.speed
     }
+
+    renderCanvas()
+    this.render()
+  }
+
+  static start(car) {
+    setInterval(function () {
+      car.move()
+    }, 16)
   }
 }
 
-window.addEventListener('load', function (event) {
-  const user = new Car('up', 0, [0, 0])
+const user = new Car('up', 1)
+
+window.addEventListener('load', () => {
+  renderCanvas()
   user.render()
+})
+
+window.addEventListener('keydown', function (event) {
+  if (event.keyCode === 38) {
+    Car.start(user)
+  }
 })
