@@ -11,16 +11,21 @@ function renderCanvas() {
 }
 
 class Car {
-  constructor(direction, speed) {
-    this.direction = direction
-    this.speed = speed
+  constructor() {
+    this.direction = 'up'
+    this.speed = 2
     this.x = cw / 2
     this.y = ch - 100
+    this.angle = Math.PI / 2
   }
 
   render() {
+    ctx.save()
+    // ctx.translate(this.x, this.y)
+    // ctx.rotate((Math.PI / 180) * 30)
     ctx.fillStyle = 'black'
-    ctx.fillRect(this.x, this.y, 10, 20)
+    ctx.fillRect(this.x, this.y, 30, 60)
+    ctx.restore()
   }
 
   turn(direction) {
@@ -33,22 +38,26 @@ class Car {
 
   move() {
     ctx.clearRect(0, 0, cw, ch)
+    renderCanvas()
 
     switch (this.direction) {
       case 'up':
         this.y -= this.speed
+        this.angle = Math.PI / 2
         break
       case 'right':
         this.x += this.speed
+        this.angle = 0
         break
       case 'down':
         this.y += this.speed
+        this.angle = 3 * Math.PI / 2
         break
       case 'left':
         this.x -= this.speed
+        this.angle = Math.PI
     }
 
-    renderCanvas()
     this.render()
   }
 
@@ -63,7 +72,7 @@ class Car {
   }
 }
 
-const user = new Car('up', 1)
+const user = new Car()
 
 window.addEventListener('load', () => {
   renderCanvas()
