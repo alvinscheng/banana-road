@@ -16,15 +16,18 @@ class Car {
     this.speed = 2
     this.x = cw / 2
     this.y = ch - 100
-    this.angle = Math.PI / 2
+    this.w = 25
+    this.h = 50
+    this.angle = 0
   }
 
   render() {
     ctx.save()
-    // ctx.translate(this.x, this.y)
-    // ctx.rotate((Math.PI / 180) * 30)
+    ctx.translate(this.x + (this.w / 2), this.y + (this.h / 2))
+    ctx.rotate(this.angle)
+    ctx.translate(-(this.x + (this.w / 2)), -(this.y + (this.h / 2)))
     ctx.fillStyle = 'black'
-    ctx.fillRect(this.x, this.y, 30, 60)
+    ctx.fillRect(this.x, this.y, this.w, this.h)
     ctx.restore()
   }
 
@@ -43,19 +46,19 @@ class Car {
     switch (this.direction) {
       case 'up':
         this.y -= this.speed
-        this.angle = Math.PI / 2
+        this.angle = 0
         break
       case 'right':
         this.x += this.speed
-        this.angle = 0
+        this.angle = 3 * Math.PI / 2
         break
       case 'down':
         this.y += this.speed
-        this.angle = 3 * Math.PI / 2
+        this.angle = Math.PI
         break
       case 'left':
         this.x -= this.speed
-        this.angle = Math.PI
+        this.angle = Math.PI / 2
     }
 
     this.render()
