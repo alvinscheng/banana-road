@@ -52,8 +52,8 @@ class Car {
     if (this.x <= 0) {
       this.x = 0
     }
-    else if (this.x >= cw - this.w) {
-      this.x = cw - this.w
+    else if (this.x >= cw) {
+      this.x = cw
     }
 
     switch (this.direction) {
