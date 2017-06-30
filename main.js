@@ -38,9 +38,16 @@ class Car {
         this.location[0] -= this.speed
     }
   }
+
+  static start(car) {
+    setInterval(function () {
+      car.move()
+    }, 16)
+  }
 }
 
+const user = new Car('up', 10, [0, 0])
+
 window.addEventListener('load', function (event) {
-  const user = new Car('up', 0, [0, 0])
   user.render()
 })
