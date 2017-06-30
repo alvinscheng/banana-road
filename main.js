@@ -15,9 +15,11 @@ function renderCanvas() {
 class Car {
   constructor() {
     this.direction = 'up'
-    this.speed = 2
+    this.speed = 5
     this.x = cw / 2
     this.y = ch - 100
+    this.w = 50
+    this.h = 75
   }
 
   render() {
@@ -30,7 +32,7 @@ class Car {
     else {
       mario.src = 'images/mario-straight.png'
     }
-    ctx.drawImage(mario, this.x, this.y)
+    ctx.drawImage(mario, this.x, this.y, this.w, this.h)
   }
 
   turn(direction) {
@@ -44,6 +46,13 @@ class Car {
   move() {
     ctx.clearRect(0, 0, cw, ch)
     renderCanvas()
+
+    if (this.x <= 0) {
+      this.x = 0
+    }
+    else if (this.x >= cw - this.w) {
+      this.x = cw - this.w
+    }
 
     switch (this.direction) {
       case 'up':
