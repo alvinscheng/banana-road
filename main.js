@@ -1,14 +1,19 @@
 const $canvas = document.querySelector('#canvas')
 const ctx = $canvas.getContext('2d')
-ctx.fillStyle = '#ecf0f1'
-ctx.fillRect(0, 0, $canvas.width, $canvas.height)
+const cw = $canvas.width
+const ch = $canvas.height
+
+function renderCanvas() {
+  ctx.fillStyle = '#ecf0f1'
+  ctx.fillRect(0, 0, cw, ch)
+}
 
 class Car {
   constructor(direction, speed) {
     this.direction = direction
     this.speed = speed
-    this.x = $canvas.width / 2
-    this.y = $canvas.height - 100
+    this.x = cw / 2
+    this.y = ch - 100
   }
 
   render() {
@@ -25,7 +30,7 @@ class Car {
   }
 
   move() {
-    ctx.clearRect(0, 0, $canvas.width, $canvas.height)
+    ctx.clearRect(0, 0, cw, ch)
 
     switch (this.direction) {
       case 'up':
@@ -41,8 +46,7 @@ class Car {
         this.x -= this.speed
     }
 
-    ctx.fillStyle = '#ecf0f1'
-    ctx.fillRect(0, 0, $canvas.width, $canvas.height)
+    renderCanvas()
     this.render()
   }
 
@@ -55,7 +59,10 @@ class Car {
 
 const user = new Car('up', 1)
 
-window.addEventListener('load', () => user.render())
+window.addEventListener('load', () => {
+  renderCanvas()
+  user.render()
+})
 
 window.addEventListener('keydown', function (event) {
   if (event.keyCode === 38) {
