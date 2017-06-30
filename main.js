@@ -48,6 +48,10 @@ class Car {
 
 const user = new Car('up', 10, [0, 0])
 
-window.addEventListener('load', function (event) {
-  user.render()
+window.addEventListener('load', () => user.render())
+
+window.addEventListener('keydown', function (event) {
+  if (event.keyCode === 38) {
+    Car.start(user)
+  }
 })
