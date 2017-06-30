@@ -2,6 +2,8 @@ const $canvas = document.querySelector('#canvas')
 const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
+let moving = false
+let carRunning
 
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
@@ -51,9 +53,13 @@ class Car {
   }
 
   static start(car) {
-    setInterval(function () {
+    carRunning = setInterval(function () {
       car.move()
     }, 16)
+  }
+
+  static stop(car) {
+    clearInterval(carRunning)
   }
 }
 
@@ -66,6 +72,14 @@ window.addEventListener('load', () => {
 
 window.addEventListener('keydown', function (event) {
   if (event.keyCode === 38) {
-    Car.start(user)
+    if (!moving) {
+      moving = true
+      Car.start(user)
+    }
   }
+})
+
+window.addEventListener('keyup', function (event) {
+  moving = false
+  Car.stop(user)
 })
