@@ -11,17 +11,17 @@ background.src = 'images/bg.jpg'
 
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
-  ctx.fillRect(0, 0, cw, ch)
+  ctx.drawImage(background, 0, 0, cw, ch)
 }
 
 class Car {
   constructor() {
     this.direction = 'up'
-    this.speed = 5
+    this.speed = 8
     this.x = cw / 2
-    this.y = ch - 100
-    this.w = 50
-    this.h = 75
+    this.y = ch - 250
+    this.w = 150
+    this.h = 200
   }
 
   render() {
@@ -34,7 +34,7 @@ class Car {
     else {
       mario.src = 'images/mario-straight.png'
     }
-    ctx.drawImage(mario, this.x, this.y, this.w, this.h)
+    ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
   }
 
   turn(direction) {
