@@ -74,3 +74,7 @@ window.addEventListener('keydown', function (event) {
     Car.start(user)
   }
 })
+
+window.addEventListener('keyup', function (event) {
+  Car.stop(user)
+})
