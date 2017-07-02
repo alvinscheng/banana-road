@@ -17,11 +17,11 @@ function renderCanvas() {
 class Car {
   constructor() {
     this.direction = 'up'
-    this.speed = 8
+    this.speed = 10
     this.x = cw / 2
     this.y = ch - 250
-    this.w = 150
-    this.h = 200
+    this.w = 100
+    this.h = 125
   }
 
   render() {
