@@ -3,7 +3,7 @@ const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
 let moving = false
-let carRunning
+let carRunning, banMoving
 const mario = new Image()
 mario.src = 'images/mario-straight.png'
 
@@ -24,20 +24,16 @@ function startGame() {
   for (let i = bananas.length - 1; i >= 0; i--) {
     bananas[i].render()
     Banana.start(bananas[i])
-
-    if (bananas[i].y >= ch) {
-      bananas.splice(i, 1)
-    }
   }
 }
 
 class Banana {
   constructor() {
-    this.speed = 2
+    this.speed = 1.7
     this.x = Math.random() * 40 + (cw / 2 - 20)
     this.y = ch / 4
-    this.w = 30
-    this.h = 30
+    this.w = 25
+    this.h = 25
   }
 
   render() {
@@ -52,25 +48,29 @@ class Banana {
     this.h += 1
 
     if (this.x > cw / 2) {
-      this.x += Math.random() * 4 + 1
+      this.x += Math.random() * 4
     }
     else if (this.x < cw / 2) {
-      this.x -= Math.random() + 1
+      this.x -= Math.random() * 4
     }
 
     user.render()
     this.render()
 
-    if (this.y === ch) {
+    if (this.y >= ch) {
       bananas.splice(0, 1)
       startGame()
     }
   }
 
   static start(ban) {
-    setInterval(function () {
+    banMoving = setInterval(function () {
       ban.move()
     }, 16)
+  }
+
+  static stop(ban) {
+    clearInterval(banMoving)
   }
 }
 
