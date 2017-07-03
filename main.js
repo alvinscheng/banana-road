@@ -32,7 +32,7 @@ function startGame() {
 
 class Banana {
   constructor() {
-    this.speed = 1
+    this.speed = 2
     this.x = cw / 2
     this.y = ch / 4
     this.w = 30
@@ -47,6 +47,8 @@ class Banana {
     ctx.clearRect(0, 0, cw, ch)
     renderCanvas()
     this.y += this.speed
+    this.w += 1
+    this.h += 1
     user.render()
     this.render()
   }
