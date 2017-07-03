@@ -12,15 +12,27 @@ background.src = 'images/bg.jpg'
 
 const banana = new Image()
 banana.src = 'images/banana.png'
+const bananas = []
 
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
   ctx.drawImage(background, 0, 0, cw, ch)
 }
 
+function startGame() {
+  for (let i = 0; i < bananas.length; i++) {
+    bananas[i].render()
+    Banana.start(bananas[i])
+
+    if (bananas[i].y >= ch) {
+      bananas.splice(i, 1)
+    }
+  }
+}
+
 class Banana {
   constructor() {
-    this.speed = 10
+    this.speed = 2
     this.x = cw / 2
     this.y = ch / 3
     this.w = 30
@@ -32,7 +44,17 @@ class Banana {
   }
 
   move() {
+    ctx.clearRect(0, 0, cw, ch)
+    renderCanvas()
     this.y += this.speed
+    user.render()
+    this.render()
+  }
+
+  static start(ban) {
+    setInterval(function () {
+      ban.move()
+    }, 16)
   }
 }
 
@@ -107,12 +129,12 @@ class Car {
 }
 
 const user = new Car()
-const bananas = new Banana()
 
 window.addEventListener('load', () => {
   renderCanvas()
   user.render()
-  bananas.render()
+  bananas.push(new Banana())
+  startGame()
 })
 
 window.addEventListener('keydown', function (event) {
