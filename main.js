@@ -34,14 +34,14 @@ function startGame() {
 class Banana {
   constructor() {
     this.speed = 2
-    this.x = cw / 2
+    this.x = Math.random() * 40 + (cw / 2 - 20)
     this.y = ch / 4
     this.w = 30
     this.h = 30
   }
 
   render() {
-    ctx.drawImage(banana, this.x, this.y, this.w, this.h)
+    ctx.drawImage(banana, this.x - this.w / 2, this.y, this.w, this.h)
   }
 
   move() {
