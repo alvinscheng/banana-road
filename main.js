@@ -50,6 +50,14 @@ class Banana {
     this.y += this.speed
     this.w += 1
     this.h += 1
+
+    if (this.x > cw / 2) {
+      this.x += Math.random() * 4 + 1
+    }
+    else if (this.x < cw / 2) {
+      this.x -= Math.random() + 1
+    }
+
     user.render()
     this.render()
 
