@@ -20,7 +20,8 @@ function renderCanvas() {
 }
 
 function startGame() {
-  for (let i = 0; i < bananas.length; i++) {
+  // bananas.push(new Banana())
+  for (let i = bananas.length - 1; i >= 0; i--) {
     bananas[i].render()
     Banana.start(bananas[i])
 
@@ -51,6 +52,11 @@ class Banana {
     this.h += 1
     user.render()
     this.render()
+
+    if (this.y === ch) {
+      bananas.splice(0, 1)
+      startGame()
+    }
   }
 
   static start(ban) {
