@@ -32,9 +32,9 @@ function startGame() {
 
 class Banana {
   constructor() {
-    this.speed = 2
+    this.speed = 1
     this.x = cw / 2
-    this.y = ch / 3
+    this.y = ch / 4
     this.w = 30
     this.h = 30
   }
