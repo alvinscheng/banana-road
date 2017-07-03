@@ -11,11 +11,29 @@ const background = new Image()
 background.src = 'images/bg.jpg'
 
 const banana = new Image()
-banana.src = 'images.banana.png'
+banana.src = 'images/banana.png'
 
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
   ctx.drawImage(background, 0, 0, cw, ch)
+}
+
+class Banana {
+  constructor() {
+    this.speed = 10
+    this.x = cw / 2
+    this.y = ch / 3
+    this.w = 30
+    this.h = 30
+  }
+
+  render() {
+    ctx.drawImage(banana, this.x, this.y, this.w, this.h)
+  }
+
+  move() {
+    this.y += this.speed
+  }
 }
 
 class Car {
@@ -89,10 +107,12 @@ class Car {
 }
 
 const user = new Car()
+const bananas = new Banana()
 
 window.addEventListener('load', () => {
   renderCanvas()
   user.render()
+  bananas.render()
 })
 
 window.addEventListener('keydown', function (event) {
