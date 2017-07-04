@@ -26,6 +26,14 @@ function startScreen() {
   ctx.fillText('Press Space to Start', 200, 200)
 }
 
+/* function gameOver() {
+  gameOn = false
+  ctx.font = '48px serif'
+  ctx.fillText('GAME OVER', 125, 165)
+  ctx.font = '24px serif'
+  ctx.fillText('Press Space to Try Again', 200, 200)
+}
+*/
 function startGame() {
   ban = new Banana()
   ban.render()
@@ -39,6 +47,7 @@ class Banana {
     this.y = ch / 4
     this.w = 25
     this.h = 25
+    this.angle = Math.random() * 4
   }
 
   render() {
@@ -54,10 +63,10 @@ class Banana {
       this.h += 1
 
       if (this.x > cw / 2) {
-        this.x += Math.random() * 4
+        this.x += this.angle
       }
       else if (this.x < cw / 2) {
-        this.x -= Math.random() * 4
+        this.x -= this.angle
       }
 
       if (this.y <= ch) {
