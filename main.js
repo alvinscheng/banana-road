@@ -3,6 +3,7 @@ const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
 let gameOn = false
+let gameOver = false
 let moving = false
 let carRunning, banMoving, ban
 const mario = new Image()
@@ -26,8 +27,14 @@ function startScreen() {
   ctx.fillText('Press Space to Start', 200, 200)
 }
 
-function gameOver() {
-  gameOn = false
+function newGame() {
+  renderCanvas()
+  startGame()
+  user.render()
+  startScreen()
+}
+
+function gameOverScreen() {
   ctx.font = '48px serif'
   ctx.fillText('GAME OVER', 155, 165)
   ctx.font = '24px serif'
@@ -97,7 +104,7 @@ class Car {
     this.direction = 'up'
     this.speed = 10
     this.x = cw / 2
-    this.y = ch - 250
+    this.y = ch - 175
     this.w = 100
     this.h = 125
   }
@@ -151,7 +158,9 @@ class Car {
 
       if (this.x + this.w >= ban.x && this.x <= ban.x + ban.w) {
         if (this.y + this.h >= ban.y + ban.h / 2 && this.y + 2 * this.h / 3 <= ban.y + ban.h) {
-          gameOver()
+          gameOn = false
+          gameOver = true
+          gameOverScreen()
         }
       }
 
@@ -174,15 +183,17 @@ class Car {
 const user = new Car()
 
 window.addEventListener('load', () => {
-  renderCanvas()
-  startGame()
-  user.render()
-  startScreen()
+  newGame()
 })
 
 window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
-    gameOn = true
+    if (gameOver) {
+      gameOver = false
+    }
+    else {
+      gameOn = true
+    }
   }
   if (gameOn === true) {
     switch (event.keyCode) {
