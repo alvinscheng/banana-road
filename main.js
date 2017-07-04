@@ -46,8 +46,10 @@ function newGame() {
 function gameOverScreen() {
   ctx.font = '48px serif'
   ctx.fillText('GAME OVER', 155, 165)
-  ctx.font = '24px serif'
-  ctx.fillText('Press Space to Try Again', 180, 200)
+  ctx.font = '32px serif'
+  ctx.fillText('Score: ' + bananaCount, 240, 200)
+  ctx.font = '18px serif'
+  ctx.fillText('Press Space to Try Again', 210, 230)
 }
 
 function startGame() {
