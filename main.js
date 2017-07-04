@@ -19,6 +19,13 @@ function renderCanvas() {
   ctx.drawImage(background, 0, 0, cw, ch)
 }
 
+function startScreen() {
+  ctx.font = '48px serif'
+  ctx.fillText('BANANA ROAD', 125, 165)
+  ctx.font = '24px serif'
+  ctx.fillText('Press Space to Start', 200, 200)
+}
+
 function startGame() {
   ban = new Banana()
   ban.render()
@@ -153,8 +160,9 @@ const user = new Car()
 
 window.addEventListener('load', () => {
   renderCanvas()
-  user.render()
   startGame()
+  user.render()
+  startScreen()
 })
 
 window.addEventListener('keydown', function (event) {
