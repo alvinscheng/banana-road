@@ -27,6 +27,10 @@ function renderCanvas() {
 }
 
 function startScreen() {
+  ctx.save()
+  ctx.fillStyle = 'rgba(73, 80, 91, 0.7)'
+  ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 3 - 10)
+  ctx.restore()
   ctx.font = '48px serif'
   ctx.fillText('BANANA ROAD', 125, 165)
   ctx.font = '24px serif'
@@ -44,6 +48,10 @@ function newGame() {
 }
 
 function gameOverScreen() {
+  ctx.save()
+  ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
+  ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 3 + 15)
+  ctx.restore()
   ctx.font = '48px serif'
   ctx.fillText('GAME OVER', 155, 165)
   ctx.font = '32px serif'
