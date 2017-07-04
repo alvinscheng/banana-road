@@ -21,6 +21,9 @@ background.src = 'images/bg.jpg'
 const banana = new Image()
 banana.src = 'images/banana.png'
 
+const tree = new Image()
+tree.src = 'images/tree.png'
+
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
   ctx.drawImage(background, 0, 0, cw, ch)
@@ -39,6 +42,10 @@ function startScreen() {
 
 function newGame() {
   renderCanvas()
+  const treeL = new Tree(cw / 2 - 10)
+  const treeR = new Tree(cw / 2 + 50)
+  treeL.render()
+  treeR.render()
   startGame()
   bananaCount = 0
   $bananaCount.textContent = bananaCount
@@ -64,6 +71,20 @@ function startGame() {
   ban = new Banana()
   ban.render()
   Banana.start(ban)
+}
+
+class Tree {
+  constructor(x) {
+    this.speed = 3
+    this.x = x
+    this.y = ch / 5
+    this.w = 40
+    this.h = 40
+  }
+
+  render() {
+    ctx.drawImage(tree, this.x - this.w, this.y, this.w, this.h)
+  }
 }
 
 class Banana {
