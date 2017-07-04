@@ -26,14 +26,14 @@ function startScreen() {
   ctx.fillText('Press Space to Start', 200, 200)
 }
 
-/* function gameOver() {
+function gameOver() {
   gameOn = false
   ctx.font = '48px serif'
-  ctx.fillText('GAME OVER', 125, 165)
+  ctx.fillText('GAME OVER', 155, 165)
   ctx.font = '24px serif'
-  ctx.fillText('Press Space to Try Again', 200, 200)
+  ctx.fillText('Press Space to Try Again', 180, 200)
 }
-*/
+
 function startGame() {
   ban = new Banana()
   ban.render()
@@ -147,6 +147,12 @@ class Car {
           break
         case 'left':
           this.x -= this.speed
+      }
+
+      if (this.x + this.w >= ban.x && this.x <= ban.x + ban.w) {
+        if (this.y + this.h >= ban.y + ban.h / 2 && this.y + 2 * this.h / 3 <= ban.y + ban.h) {
+          gameOver()
+        }
       }
 
       ban.render()
