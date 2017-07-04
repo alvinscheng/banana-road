@@ -7,9 +7,13 @@ let gameOver = false
 let moving = false
 const directions = ['straight', 'right', '270', '225', '180', '135', '90', 'left']
 let cartDir = 2
+let bananaCount = 0
 let carRunning, banMoving, ban, user, carSpinning
 const mario = new Image()
 mario.src = 'images/mario-straight.png'
+
+const $bananaCount = document.querySelector('#banana-count')
+$bananaCount.textContent = bananaCount
 
 const background = new Image()
 background.src = 'images/bg.jpg'
@@ -23,6 +27,10 @@ function renderCanvas() {
 }
 
 function startScreen() {
+  ctx.save()
+  ctx.fillStyle = 'rgba(73, 80, 91, 0.7)'
+  ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 3 - 10)
+  ctx.restore()
   ctx.font = '48px serif'
   ctx.fillText('BANANA ROAD', 125, 165)
   ctx.font = '24px serif'
@@ -32,16 +40,24 @@ function startScreen() {
 function newGame() {
   renderCanvas()
   startGame()
+  bananaCount = 0
+  $bananaCount.textContent = bananaCount
   user = new Car()
   user.render()
   startScreen()
 }
 
 function gameOverScreen() {
+  ctx.save()
+  ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
+  ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 3 + 15)
+  ctx.restore()
   ctx.font = '48px serif'
   ctx.fillText('GAME OVER', 155, 165)
-  ctx.font = '24px serif'
-  ctx.fillText('Press Space to Try Again', 180, 200)
+  ctx.font = '32px serif'
+  ctx.fillText('Score: ' + bananaCount, 240, 200)
+  ctx.font = '18px serif'
+  ctx.fillText('Press Space to Try Again', 210, 230)
 }
 
 function startGame() {
@@ -83,6 +99,8 @@ class Banana {
         this.render()
       }
       else {
+        bananaCount++
+        $bananaCount.textContent = bananaCount
         Banana.stop(banMoving)
         startGame()
       }
