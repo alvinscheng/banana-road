@@ -5,7 +5,9 @@ const ch = $canvas.height
 let gameOn = false
 let gameOver = false
 let moving = false
-let carRunning, banMoving, ban, user
+const directions = ['straight', 'right', '270', '225', '180', '135', '90', 'left']
+let cartDir = 2
+let carRunning, banMoving, ban, user, carSpinning
 const mario = new Image()
 mario.src = 'images/mario-straight.png'
 
@@ -123,6 +125,20 @@ class Car {
     ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
   }
 
+  spin() {
+    if (cartDir > 7) {
+      cartDir = 0
+    }
+    ctx.clearRect(0, 0, cw, ch)
+    renderCanvas()
+    ban.render()
+    gameOverScreen()
+    mario.src = 'images/mario-' + directions[cartDir] + '.png'
+    ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
+
+    cartDir++
+  }
+
   turn(direction) {
     this.direction = direction
   }
@@ -161,7 +177,7 @@ class Car {
         if (this.y + this.h >= ban.y + ban.h / 2 && this.y + 2 * this.h / 3 <= ban.y + ban.h) {
           gameOn = false
           gameOver = true
-          gameOverScreen()
+          Car.startSpinning(user)
         }
       }
 
@@ -179,6 +195,16 @@ class Car {
   static stop(car) {
     clearInterval(carRunning)
   }
+
+  static startSpinning(car) {
+    carSpinning = setInterval(function () {
+      car.spin()
+    }, 16)
+  }
+
+  static stopSpinning(car) {
+    clearInterval(carSpinning)
+  }
 }
 
 window.addEventListener('load', () => {
@@ -190,6 +216,7 @@ window.addEventListener('keydown', function (event) {
     if (gameOver) {
       gameOver = false
       Banana.stop()
+      Car.stopSpinning()
       newGame()
     }
     else {
