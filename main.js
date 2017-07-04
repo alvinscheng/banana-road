@@ -5,7 +5,7 @@ const ch = $canvas.height
 let gameOn = false
 let gameOver = false
 let moving = false
-let carRunning, banMoving, ban
+let carRunning, banMoving, ban, user
 const mario = new Image()
 mario.src = 'images/mario-straight.png'
 
@@ -30,6 +30,7 @@ function startScreen() {
 function newGame() {
   renderCanvas()
   startGame()
+  user = new Car()
   user.render()
   startScreen()
 }
@@ -180,8 +181,6 @@ class Car {
   }
 }
 
-const user = new Car()
-
 window.addEventListener('load', () => {
   newGame()
 })
@@ -190,6 +189,8 @@ window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
     if (gameOver) {
       gameOver = false
+      Banana.stop()
+      newGame()
     }
     else {
       gameOn = true
