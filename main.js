@@ -3,25 +3,84 @@ const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
 let moving = false
-let carRunning
+let carRunning, banMoving, ban
 const mario = new Image()
 mario.src = 'images/mario-straight.png'
+
 const background = new Image()
 background.src = 'images/bg.jpg'
+
+const banana = new Image()
+banana.src = 'images/banana.png'
 
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
   ctx.drawImage(background, 0, 0, cw, ch)
 }
 
+function startGame() {
+  ban = new Banana()
+  ban.render()
+  Banana.start(ban)
+}
+
+class Banana {
+  constructor() {
+    this.speed = 3
+    this.x = Math.random() * 40 + (cw / 2 - 20)
+    this.y = ch / 4
+    this.w = 25
+    this.h = 25
+  }
+
+  render() {
+    ctx.drawImage(banana, this.x - this.w / 2, this.y, this.w, this.h)
+  }
+
+  move() {
+    ctx.clearRect(0, 0, cw, ch)
+    renderCanvas()
+    this.y += this.speed
+    this.w += 1
+    this.h += 1
+
+    if (this.x > cw / 2) {
+      this.x += Math.random() * 4
+    }
+    else if (this.x < cw / 2) {
+      this.x -= Math.random() * 4
+    }
+
+    if (this.y <= ch) {
+      this.render()
+    }
+    else {
+      Banana.stop(banMoving)
+      startGame()
+    }
+
+    user.render()
+  }
+
+  static start(ban) {
+    banMoving = setInterval(function () {
+      ban.move()
+    }, 16)
+  }
+
+  static stop() {
+    clearInterval(banMoving)
+  }
+}
+
 class Car {
   constructor() {
     this.direction = 'up'
-    this.speed = 8
+    this.speed = 10
     this.x = cw / 2
     this.y = ch - 250
-    this.w = 150
-    this.h = 200
+    this.w = 100
+    this.h = 125
   }
 
   render() {
@@ -70,6 +129,7 @@ class Car {
         this.x -= this.speed
     }
 
+    ban.render()
     this.render()
   }
 
@@ -89,6 +149,7 @@ const user = new Car()
 window.addEventListener('load', () => {
   renderCanvas()
   user.render()
+  startGame()
 })
 
 window.addEventListener('keydown', function (event) {
