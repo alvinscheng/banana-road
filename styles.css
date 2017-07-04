@@ -1,3 +1,10 @@
+#score {
+  position: absolute;
+  color: white;
+  left: 525px;
+  top: 20px;
+}
+
 .hidden {
   display: none;
 }

@@ -7,6 +7,7 @@ let gameOver = false
 let moving = false
 const directions = ['straight', 'right', '270', '225', '180', '135', '90', 'left']
 let cartDir = 2
+// let bananaCount = 0
 let carRunning, banMoving, ban, user, carSpinning
 const mario = new Image()
 mario.src = 'images/mario-straight.png'
@@ -83,6 +84,7 @@ class Banana {
         this.render()
       }
       else {
+        // bananaCount++
         Banana.stop(banMoving)
         startGame()
       }
