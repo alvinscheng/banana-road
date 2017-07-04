@@ -36,6 +36,8 @@ function startScreen() {
 function newGame() {
   renderCanvas()
   startGame()
+  bananaCount = 0
+  $bananaCount.textContent = bananaCount
   user = new Car()
   user.render()
   startScreen()
