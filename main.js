@@ -2,6 +2,7 @@ const $canvas = document.querySelector('#canvas')
 const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
+let gameOn = false
 let moving = false
 let carRunning, banMoving, ban
 const mario = new Image()
@@ -38,28 +39,30 @@ class Banana {
   }
 
   move() {
-    ctx.clearRect(0, 0, cw, ch)
-    renderCanvas()
-    this.y += this.speed
-    this.w += 1
-    this.h += 1
+    if (gameOn) {
+      ctx.clearRect(0, 0, cw, ch)
+      renderCanvas()
+      this.y += this.speed
+      this.w += 1
+      this.h += 1
 
-    if (this.x > cw / 2) {
-      this.x += Math.random() * 4
-    }
-    else if (this.x < cw / 2) {
-      this.x -= Math.random() * 4
-    }
+      if (this.x > cw / 2) {
+        this.x += Math.random() * 4
+      }
+      else if (this.x < cw / 2) {
+        this.x -= Math.random() * 4
+      }
 
-    if (this.y <= ch) {
-      this.render()
-    }
-    else {
-      Banana.stop(banMoving)
-      startGame()
-    }
+      if (this.y <= ch) {
+        this.render()
+      }
+      else {
+        Banana.stop(banMoving)
+        startGame()
+      }
 
-    user.render()
+      user.render()
+    }
   }
 
   static start(ban) {
@@ -105,32 +108,34 @@ class Car {
   }
 
   move() {
-    ctx.clearRect(0, 0, cw, ch)
-    renderCanvas()
+    if (gameOn) {
+      ctx.clearRect(0, 0, cw, ch)
+      renderCanvas()
 
-    if (this.x <= 0) {
-      this.x = 0
-    }
-    else if (this.x >= cw) {
-      this.x = cw
-    }
+      if (this.x <= 0) {
+        this.x = 0
+      }
+      else if (this.x >= cw) {
+        this.x = cw
+      }
 
-    switch (this.direction) {
-      case 'up':
-        this.y -= this.speed
-        break
-      case 'right':
-        this.x += this.speed
-        break
-      case 'down':
-        this.y += this.speed
-        break
-      case 'left':
-        this.x -= this.speed
-    }
+      switch (this.direction) {
+        case 'up':
+          this.y -= this.speed
+          break
+        case 'right':
+          this.x += this.speed
+          break
+        case 'down':
+          this.y += this.speed
+          break
+        case 'left':
+          this.x -= this.speed
+      }
 
-    ban.render()
-    this.render()
+      ban.render()
+      this.render()
+    }
   }
 
   static start(car) {
