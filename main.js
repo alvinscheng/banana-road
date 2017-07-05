@@ -23,6 +23,8 @@ banana.src = 'images/banana.png'
 
 const tree = new Image()
 tree.src = 'images/tree.png'
+// const treesLeft = []
+// const treesRight = []
 
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
@@ -42,8 +44,8 @@ function startScreen() {
 
 function newGame() {
   renderCanvas()
-  const treeL = new Tree(cw / 2 - 10)
-  const treeR = new Tree(cw / 2 + 50)
+  const treeL = new Tree('left')
+  const treeR = new Tree('right')
   treeL.render()
   treeR.render()
   startGame()
@@ -74,9 +76,14 @@ function startGame() {
 }
 
 class Tree {
-  constructor(x) {
+  constructor(side) {
+    if (side === 'left') {
+      this.x = cw / 2 - 10
+    }
+    else if (side === 'right') {
+      this.x = cw / 2 + 50
+    }
     this.speed = 3
-    this.x = x
     this.y = ch / 5
     this.w = 40
     this.h = 40
