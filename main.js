@@ -2,24 +2,28 @@ const $canvas = document.querySelector('#canvas')
 const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
+
+let ban, user
+let trees = []
 let gameOn = false
 let gameOver = false
 let moving = false
+
 const directions = ['straight', 'right', '270', '225', '180', '135', '90', 'left']
 let cartDir = 2
-let bananaCount = 0
-let carRunning, banMoving, ban, user, carSpinning
-const mario = new Image()
-mario.src = 'images/mario-straight.png'
 
+let bananaCount = 0
 const $bananaCount = document.querySelector('#banana-count')
 $bananaCount.textContent = bananaCount
 
+const mario = new Image()
+mario.src = 'images/mario-straight.png'
 const background = new Image()
 background.src = 'images/bg.jpg'
-
 const banana = new Image()
 banana.src = 'images/banana.png'
+const tree = new Image()
+tree.src = 'images/tree.png'
 
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
@@ -37,16 +41,6 @@ function startScreen() {
   ctx.fillText('Press Space to Start', 200, 200)
 }
 
-function newGame() {
-  renderCanvas()
-  startGame()
-  bananaCount = 0
-  $bananaCount.textContent = bananaCount
-  user = new Car()
-  user.render()
-  startScreen()
-}
-
 function gameOverScreen() {
   ctx.save()
   ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
@@ -60,19 +54,111 @@ function gameOverScreen() {
   ctx.fillText('Press Space to Try Again', 210, 230)
 }
 
-function startGame() {
+function newGame() {
+  renderCanvas()
+  startBananas()
+  trees = []
+  startTrees()
+  bananaCount = 0
+  $bananaCount.textContent = bananaCount
+  user = new Car()
+  user.render()
+  startScreen()
+}
+
+function startBananas() {
   ban = new Banana()
   ban.render()
   Banana.start(ban)
 }
 
+function startTrees() {
+  trees.splice(0, 2)
+  trees.push(new Tree('left'), new Tree('right'))
+  trees.forEach(tree => {
+    tree.render()
+    Tree.start(tree)
+  })
+}
+
+function addTrees() {
+  trees.push(new Tree('left'), new Tree('right'))
+  trees.forEach(tree => tree.render())
+  Tree.start(trees[trees.length - 2])
+  Tree.start(trees[trees.length - 1])
+}
+
+class Tree {
+  constructor(side) {
+    this.side = side
+    if (side === 'left') {
+      this.x = cw / 2 + 17
+    }
+    else if (side === 'right') {
+      this.x = cw / 2 + 80
+    }
+    this.speed = 0.1
+    this.y = 25
+    this.w = 100
+    this.h = 100
+  }
+
+  render() {
+    ctx.drawImage(tree, this.x - this.w, this.y, this.w, this.h)
+  }
+
+  move() {
+    if (gameOn) {
+      ctx.clearRect(0, 0, cw, ch)
+      renderCanvas()
+      this.y += this.speed
+      this.w += 4
+      this.h += 4
+
+      if (this.side === 'right') {
+        this.x += 10.6
+      }
+      else if (this.side === 'left') {
+        this.x -= 6.6
+      }
+
+      if (this.x < cw / 3 && trees.length === 2) {
+        addTrees()
+      }
+
+      if (this.x < cw / 6 && trees.length === 4) {
+        addTrees()
+      }
+
+      if (this.x < 0) {
+        trees.forEach(tree => Tree.stop(tree))
+        startTrees()
+      }
+
+      trees.forEach(tree => tree.render())
+      ban.render()
+      user.render()
+    }
+  }
+
+  static start(tr) {
+    tr.isMoving = setInterval(function () {
+      tr.move()
+    }, 25)
+  }
+
+  static stop(tr) {
+    clearInterval(tr.isMoving)
+  }
+}
+
 class Banana {
   constructor() {
-    this.speed = 3
+    this.speed = 4
     this.x = Math.random() * 40 + (cw / 2 - 20)
     this.y = ch / 4
-    this.w = 25
-    this.h = 25
+    this.w = 15
+    this.h = 15
     this.angle = Math.random() * 4
   }
 
@@ -85,8 +171,8 @@ class Banana {
       ctx.clearRect(0, 0, cw, ch)
       renderCanvas()
       this.y += this.speed
-      this.w += 1
-      this.h += 1
+      this.w += 1.5
+      this.h += 1.5
 
       if (this.x > cw / 2) {
         this.x += this.angle
@@ -101,45 +187,38 @@ class Banana {
       else {
         bananaCount++
         $bananaCount.textContent = bananaCount
-        Banana.stop(banMoving)
-        startGame()
+        Banana.stop(ban)
+        startBananas()
       }
 
+      trees.forEach(tree => tree.render())
       user.render()
     }
   }
 
   static start(ban) {
-    banMoving = setInterval(function () {
+    ban.isMoving = setInterval(function () {
       ban.move()
     }, 16)
   }
 
-  static stop() {
-    clearInterval(banMoving)
+  static stop(ban) {
+    clearInterval(ban.isMoving)
   }
 }
 
 class Car {
   constructor() {
-    this.direction = 'up'
+    this.direction = 'straight'
     this.speed = 10
     this.x = cw / 2
-    this.y = ch - 175
-    this.w = 100
-    this.h = 125
+    this.y = ch - 200
+    this.w = 125
+    this.h = 150
   }
 
   render() {
-    if (this.direction === 'left') {
-      mario.src = 'images/mario-left.png'
-    }
-    else if (this.direction === 'right') {
-      mario.src = 'images/mario-right.png'
-    }
-    else {
-      mario.src = 'images/mario-straight.png'
-    }
+    mario.src = 'images/mario-' + this.direction + '.png'
     ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
   }
 
@@ -150,6 +229,7 @@ class Car {
     ctx.clearRect(0, 0, cw, ch)
     renderCanvas()
     ban.render()
+    trees.forEach(tree => tree.render())
     gameOverScreen()
     mario.src = 'images/mario-' + directions[cartDir] + '.png'
     ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
@@ -178,14 +258,8 @@ class Car {
       }
 
       switch (this.direction) {
-        case 'up':
-          this.y -= this.speed
-          break
         case 'right':
           this.x += this.speed
-          break
-        case 'down':
-          this.y += this.speed
           break
         case 'left':
           this.x -= this.speed
@@ -198,30 +272,30 @@ class Car {
           Car.startSpinning(user)
         }
       }
-
       ban.render()
+      trees.forEach(tree => tree.render())
       this.render()
     }
   }
 
   static start(car) {
-    carRunning = setInterval(function () {
+    car.isRunning = setInterval(function () {
       car.move()
     }, 16)
   }
 
   static stop(car) {
-    clearInterval(carRunning)
+    clearInterval(car.isRunning)
   }
 
   static startSpinning(car) {
-    carSpinning = setInterval(function () {
+    car.isSpinning = setInterval(function () {
       car.spin()
-    }, 16)
+    }, 32)
   }
 
   static stopSpinning(car) {
-    clearInterval(carSpinning)
+    clearInterval(car.isSpinning)
   }
 }
 
@@ -233,8 +307,9 @@ window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
     if (gameOver) {
       gameOver = false
-      Banana.stop()
-      Car.stopSpinning()
+      Banana.stop(ban)
+      trees.forEach(tree => Tree.stop(tree))
+      Car.stopSpinning(user)
       newGame()
     }
     else {
@@ -250,13 +325,6 @@ window.addEventListener('keydown', function (event) {
           Car.start(user)
         }
         break
-      case 38:
-        user.turn('up')
-        if (!moving) {
-          moving = true
-          Car.start(user)
-        }
-        break
       case 39:
         user.turn('right')
         if (!moving) {
@@ -264,17 +332,13 @@ window.addEventListener('keydown', function (event) {
           Car.start(user)
         }
         break
-      case 40:
-        user.turn('down')
-        if (!moving) {
-          moving = true
-          Car.start(user)
-        }
     }
   }
 })
 
 window.addEventListener('keyup', function (event) {
   moving = false
+  user.direction = 'straight'
+  user.render()
   Car.stop(user)
 })
