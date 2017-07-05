@@ -3,7 +3,7 @@ const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
 
-let ban, user, treeL, treeR
+let ban, user, treeL, treeR, trees
 let gameOn = false
 let gameOver = false
 let moving = false
@@ -56,8 +56,7 @@ function gameOverScreen() {
 function newGame() {
   renderCanvas()
   startBananas()
-  startTreeLeft()
-  startTreeRight()
+  startTrees()
   bananaCount = 0
   $bananaCount.textContent = bananaCount
   user = new Car()
@@ -71,16 +70,15 @@ function startBananas() {
   Banana.start(ban)
 }
 
-function startTreeLeft() {
+function startTrees() {
+  trees = []
   treeL = new Tree('left')
-  treeL.render()
-  Tree.start(treeL)
-}
-
-function startTreeRight() {
   treeR = new Tree('right')
-  treeR.render()
-  Tree.start(treeR)
+  trees.push(treeL, treeR)
+  trees.forEach(tree => {
+    tree.render()
+    Tree.start(tree)
+  })
 }
 
 class Tree {
@@ -101,6 +99,7 @@ class Tree {
   render() {
     ctx.drawImage(tree, this.x - this.w, this.y, this.w, this.h)
   }
+
   move() {
     if (gameOn) {
       ctx.clearRect(0, 0, cw, ch)
@@ -117,13 +116,12 @@ class Tree {
       }
 
       if (this.x >= 0) {
-        this.render()
+        trees.forEach(tree => tree.render())
       }
       else {
         Tree.stop(treeL)
         Tree.stop(treeR)
-        startTreeLeft()
-        startTreeRight()
+        startTrees()
       }
       ban.render()
       user.render()
@@ -179,8 +177,8 @@ class Banana {
         Banana.stop(ban)
         startBananas()
       }
-      treeL.render()
-      treeR.render()
+
+      trees.forEach(tree => tree.render())
       user.render()
     }
   }
@@ -263,8 +261,7 @@ class Car {
         }
       }
       ban.render()
-      treeL.render()
-      treeR.render()
+      trees.forEach(tree => tree.render())
       this.render()
     }
   }
