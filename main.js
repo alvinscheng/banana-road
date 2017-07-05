@@ -3,7 +3,7 @@ const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
 
-let ban, user
+let ban, user, treeL
 let gameOn = false
 let gameOver = false
 let moving = false
@@ -56,10 +56,7 @@ function gameOverScreen() {
 function newGame() {
   renderCanvas()
   startBananas()
-  const treeL = new Tree('left')
-  const treeR = new Tree('right')
-  treeL.render()
-  treeR.render()
+  startTreeLeft()
   bananaCount = 0
   $bananaCount.textContent = bananaCount
   user = new Car()
@@ -73,6 +70,12 @@ function startBananas() {
   Banana.start(ban)
 }
 
+function startTreeLeft() {
+  treeL = new Tree('left')
+  treeL.render()
+  Tree.start(treeL)
+}
+
 class Tree {
   constructor(side) {
     this.side = side
@@ -82,7 +85,7 @@ class Tree {
     else if (side === 'right') {
       this.x = cw / 2 + 50
     }
-    this.speed = 1
+    this.speed = 0.1
     this.y = ch / 5
     this.w = 40
     this.h = 40
@@ -91,11 +94,47 @@ class Tree {
   render() {
     ctx.drawImage(tree, this.x - this.w, this.y, this.w, this.h)
   }
+  move() {
+    if (gameOn) {
+      ctx.clearRect(0, 0, cw, ch)
+      renderCanvas()
+      this.y += this.speed
+      this.w += 4
+      this.h += 4
+
+      if (this.side === 'right') {
+        this.x += 6
+      }
+      else if (this.side === 'left') {
+        this.x -= 6
+      }
+
+      if (this.x >= 0) {
+        this.render()
+      }
+      else {
+        Tree.stop()
+        startTreeLeft()
+      }
+      ban.render()
+      user.render()
+    }
+  }
+
+  static start(tr) {
+    this.isMoving = setInterval(function () {
+      tr.move()
+    }, 20)
+  }
+
+  static stop() {
+    clearInterval(this.isMoving)
+  }
 }
 
 class Banana {
   constructor() {
-    this.speed = 3
+    this.speed = 4
     this.x = Math.random() * 40 + (cw / 2 - 20)
     this.y = ch / 4
     this.w = 25
@@ -131,6 +170,7 @@ class Banana {
         Banana.stop()
         startBananas()
       }
+      treeL.render()
       user.render()
     }
   }
@@ -176,6 +216,7 @@ class Car {
     ctx.clearRect(0, 0, cw, ch)
     renderCanvas()
     ban.render()
+    treeL.render()
     gameOverScreen()
     mario.src = 'images/mario-' + directions[cartDir] + '.png'
     ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
@@ -225,6 +266,7 @@ class Car {
         }
       }
       ban.render()
+      treeL.render()
       this.render()
     }
   }
@@ -259,6 +301,7 @@ window.addEventListener('keydown', function (event) {
     if (gameOver) {
       gameOver = false
       Banana.stop()
+      Tree.stop()
       Car.stopSpinning()
       newGame()
     }
