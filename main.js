@@ -92,15 +92,15 @@ class Tree {
   constructor(side) {
     this.side = side
     if (side === 'left') {
-      this.x = cw / 2 - 10
+      this.x = cw / 2 + 17
     }
     else if (side === 'right') {
-      this.x = cw / 2 + 50
+      this.x = cw / 2 + 80
     }
     this.speed = 0.1
-    this.y = ch / 5
-    this.w = 40
-    this.h = 40
+    this.y = 25
+    this.w = 100
+    this.h = 100
   }
 
   render() {
@@ -144,7 +144,7 @@ class Tree {
   static start(tr) {
     tr.isMoving = setInterval(function () {
       tr.move()
-    }, 20)
+    }, 25)
   }
 
   static stop(tr) {
@@ -157,8 +157,8 @@ class Banana {
     this.speed = 4
     this.x = Math.random() * 40 + (cw / 2 - 20)
     this.y = ch / 4
-    this.w = 25
-    this.h = 25
+    this.w = 15
+    this.h = 15
     this.angle = Math.random() * 4
   }
 
@@ -171,8 +171,8 @@ class Banana {
       ctx.clearRect(0, 0, cw, ch)
       renderCanvas()
       this.y += this.speed
-      this.w += 1
-      this.h += 1
+      this.w += 1.5
+      this.h += 1.5
 
       if (this.x > cw / 2) {
         this.x += this.angle
@@ -212,9 +212,9 @@ class Car {
     this.direction = 'straight'
     this.speed = 10
     this.x = cw / 2
-    this.y = ch - 175
-    this.w = 100
-    this.h = 125
+    this.y = ch - 200
+    this.w = 125
+    this.h = 150
   }
 
   render() {
