@@ -2,29 +2,27 @@ const $canvas = document.querySelector('#canvas')
 const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
+
+let ban, user
 let gameOn = false
 let gameOver = false
 let moving = false
+
 const directions = ['straight', 'right', '270', '225', '180', '135', '90', 'left']
 let cartDir = 2
-let bananaCount = 0
-let carRunning, banMoving, ban, user, carSpinning
-const mario = new Image()
-mario.src = 'images/mario-straight.png'
 
+let bananaCount = 0
 const $bananaCount = document.querySelector('#banana-count')
 $bananaCount.textContent = bananaCount
 
+const mario = new Image()
+mario.src = 'images/mario-straight.png'
 const background = new Image()
 background.src = 'images/bg.jpg'
-
 const banana = new Image()
 banana.src = 'images/banana.png'
-
 const tree = new Image()
 tree.src = 'images/tree.png'
-// const treesLeft = []
-// const treesRight = []
 
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
@@ -42,20 +40,6 @@ function startScreen() {
   ctx.fillText('Press Space to Start', 200, 200)
 }
 
-function newGame() {
-  renderCanvas()
-  const treeL = new Tree('left')
-  const treeR = new Tree('right')
-  treeL.render()
-  treeR.render()
-  startGame()
-  bananaCount = 0
-  $bananaCount.textContent = bananaCount
-  user = new Car()
-  user.render()
-  startScreen()
-}
-
 function gameOverScreen() {
   ctx.save()
   ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
@@ -69,7 +53,21 @@ function gameOverScreen() {
   ctx.fillText('Press Space to Try Again', 210, 230)
 }
 
-function startGame() {
+function newGame() {
+  renderCanvas()
+  startBananas()
+  const treeL = new Tree('left')
+  const treeR = new Tree('right')
+  treeL.render()
+  treeR.render()
+  bananaCount = 0
+  $bananaCount.textContent = bananaCount
+  user = new Car()
+  user.render()
+  startScreen()
+}
+
+function startBananas() {
   ban = new Banana()
   ban.render()
   Banana.start(ban)
@@ -92,33 +90,6 @@ class Tree {
 
   render() {
     ctx.drawImage(tree, this.x - this.w, this.y, this.w, this.h)
-  }
-
-  move() {
-    // if (gameOn) {
-    ctx.clearRect(0, 0, cw, ch)
-    renderCanvas()
-    this.y += this.speed
-    this.w += 4
-    this.h += 6
-    if (this.side === 'right') {
-      this.x += 15
-    }
-    else if (this.side === 'left') {
-      this.x -= 12
-    }
-
-    if (this.y <= ch) {
-      this.render()
-    }
-    user.render()
-    // }
-  }
-
-  static start(tree) {
-    setInterval(function () {
-      tree.move()
-    }, 20)
   }
 }
 
@@ -157,22 +128,21 @@ class Banana {
       else {
         bananaCount++
         $bananaCount.textContent = bananaCount
-        Banana.stop(banMoving)
-        startGame()
+        Banana.stop()
+        startBananas()
       }
-
       user.render()
     }
   }
 
   static start(ban) {
-    banMoving = setInterval(function () {
+    this.isMoving = setInterval(function () {
       ban.move()
     }, 16)
   }
 
   static stop() {
-    clearInterval(banMoving)
+    clearInterval(this.isMoving)
   }
 }
 
@@ -254,30 +224,29 @@ class Car {
           Car.startSpinning(user)
         }
       }
-
       ban.render()
       this.render()
     }
   }
 
   static start(car) {
-    carRunning = setInterval(function () {
+    this.isRunning = setInterval(function () {
       car.move()
     }, 16)
   }
 
   static stop(car) {
-    clearInterval(carRunning)
+    clearInterval(this.isRunning)
   }
 
   static startSpinning(car) {
-    carSpinning = setInterval(function () {
+    this.isSpinning = setInterval(function () {
       car.spin()
     }, 16)
   }
 
   static stopSpinning(car) {
-    clearInterval(carSpinning)
+    clearInterval(this.isSpinning)
   }
 }
 
