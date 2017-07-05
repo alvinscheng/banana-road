@@ -191,6 +191,14 @@ class Banana {
         startBananas()
       }
 
+      if (this.x < user.x + user.w / 2 && this.x + this.w >= user.x) {
+        if (this.y + this.h >= user.y + 2 * user.h / 3 && this.y + this.h / 2 <= user.y + user.h) {
+          gameOn = false
+          gameOver = true
+          Car.startSpinning(user)
+        }
+      }
+
       trees.forEach(tree => tree.render())
       user.render()
     }
@@ -265,13 +273,6 @@ class Car {
           this.x -= this.speed
       }
 
-      if (this.x + this.w >= ban.x && this.x <= ban.x + ban.w) {
-        if (this.y + this.h >= ban.y + ban.h / 2 && this.y + 2 * this.h / 3 <= ban.y + ban.h) {
-          gameOn = false
-          gameOver = true
-          Car.startSpinning(user)
-        }
-      }
       ban.render()
       trees.forEach(tree => tree.render())
       this.render()
