@@ -245,14 +245,8 @@ class Car {
       }
 
       switch (this.direction) {
-        case 'up':
-          this.y -= this.speed
-          break
         case 'right':
           this.x += this.speed
-          break
-        case 'down':
-          this.y += this.speed
           break
         case 'left':
           this.x -= this.speed
@@ -318,13 +312,6 @@ window.addEventListener('keydown', function (event) {
           Car.start(user)
         }
         break
-      case 38:
-        user.turn('up')
-        if (!moving) {
-          moving = true
-          Car.start(user)
-        }
-        break
       case 39:
         user.turn('right')
         if (!moving) {
@@ -332,12 +319,6 @@ window.addEventListener('keydown', function (event) {
           Car.start(user)
         }
         break
-      case 40:
-        user.turn('down')
-        if (!moving) {
-          moving = true
-          Car.start(user)
-        }
     }
   }
 })
