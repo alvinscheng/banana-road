@@ -284,7 +284,7 @@ class Car {
   static startSpinning(car) {
     this.isSpinning = setInterval(function () {
       car.spin()
-    }, 16)
+    }, 32)
   }
 
   static stopSpinning(car) {
