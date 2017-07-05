@@ -3,7 +3,8 @@ const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
 
-let ban, user, treeL, treeR, treeL2, treeR2, trees
+let ban, user
+let trees = []
 let gameOn = false
 let gameOver = false
 let moving = false
@@ -56,6 +57,7 @@ function gameOverScreen() {
 function newGame() {
   renderCanvas()
   startBananas()
+  trees = []
   startTrees()
   bananaCount = 0
   $bananaCount.textContent = bananaCount
@@ -71,14 +73,19 @@ function startBananas() {
 }
 
 function startTrees() {
-  trees = []
-  treeL = new Tree('left')
-  treeR = new Tree('right')
-  trees.push(treeL, treeR)
+  trees.splice(0, 2)
+  trees.push(new Tree('left'), new Tree('right'))
   trees.forEach(tree => {
     tree.render()
     Tree.start(tree)
   })
+}
+
+function addTrees() {
+  trees.push(new Tree('left'), new Tree('right'))
+  trees.forEach(tree => tree.render())
+  Tree.start(trees[trees.length - 2])
+  Tree.start(trees[trees.length - 1])
 }
 
 class Tree {
@@ -115,13 +122,12 @@ class Tree {
         this.x -= 6.6
       }
 
-      if (this.x < cw / 4 && trees.length <= 4) {
-        treeL2 = new Tree('left')
-        treeR2 = new Tree('right')
-        trees.push(treeL2, treeR2)
-        trees.forEach(tree => tree.render())
-        Tree.start(treeL2)
-        Tree.start(treeR2)
+      if (this.x < cw / 3 && trees.length === 2) {
+        addTrees()
+      }
+
+      if (this.x < cw / 6 && trees.length === 4) {
+        addTrees()
       }
 
       if (this.x < 0) {
@@ -223,8 +229,7 @@ class Car {
     ctx.clearRect(0, 0, cw, ch)
     renderCanvas()
     ban.render()
-    treeL.render()
-    treeR.render()
+    trees.forEach(tree => tree.render())
     gameOverScreen()
     mario.src = 'images/mario-' + directions[cartDir] + '.png'
     ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
