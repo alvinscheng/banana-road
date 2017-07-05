@@ -3,7 +3,7 @@ const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
 
-let ban, user, treeL, treeR, trees
+let ban, user, treeL, treeR, treeL2, treeR2, trees
 let gameOn = false
 let gameOver = false
 let moving = false
@@ -115,14 +115,21 @@ class Tree {
         this.x -= 6.6
       }
 
-      if (this.x >= 0) {
+      if (this.x < cw / 4 && trees.length <= 4) {
+        treeL2 = new Tree('left')
+        treeR2 = new Tree('right')
+        trees.push(treeL2, treeR2)
         trees.forEach(tree => tree.render())
+        Tree.start(treeL2)
+        Tree.start(treeR2)
       }
-      else {
-        Tree.stop(treeL)
-        Tree.stop(treeR)
+
+      if (this.x < 0) {
+        trees.forEach(tree => Tree.stop(tree))
         startTrees()
       }
+
+      trees.forEach(tree => tree.render())
       ban.render()
       user.render()
     }
@@ -296,8 +303,7 @@ window.addEventListener('keydown', function (event) {
     if (gameOver) {
       gameOver = false
       Banana.stop(ban)
-      Tree.stop(treeL)
-      Tree.stop(treeR)
+      trees.forEach(tree => Tree.stop(tree))
       Car.stopSpinning(user)
       newGame()
     }
