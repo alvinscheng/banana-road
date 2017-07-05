@@ -3,8 +3,9 @@ const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
 
-let ban, user
+let user
 let trees = []
+let bananas = []
 let gameOn = false
 let gameOver = false
 let moving = false
@@ -56,20 +57,24 @@ function gameOverScreen() {
 
 function newGame() {
   renderCanvas()
-  startBananas()
+  user = new Car()
   trees = []
-  startTrees()
+  bananas = []
   bananaCount = 0
   $bananaCount.textContent = bananaCount
-  user = new Car()
+  startBananas()
+  startTrees()
   user.render()
   startScreen()
 }
 
 function startBananas() {
-  ban = new Banana()
-  ban.render()
-  Banana.start(ban)
+  bananas.splice(0, 1)
+  bananas.push(new Banana())
+  bananas.forEach(banana => {
+    banana.render()
+    Banana.start(banana)
+  })
 }
 
 function startTrees() {
@@ -136,7 +141,7 @@ class Tree {
       }
 
       trees.forEach(tree => tree.render())
-      ban.render()
+      bananas.forEach(banana => banana.render())
       user.render()
     }
   }
@@ -181,13 +186,10 @@ class Banana {
         this.x -= this.angle
       }
 
-      if (this.y <= ch) {
-        this.render()
-      }
-      else {
+      if (this.y > ch) {
         bananaCount++
         $bananaCount.textContent = bananaCount
-        Banana.stop(ban)
+        bananas.forEach(banana => Banana.stop(banana))
         startBananas()
       }
 
@@ -199,6 +201,7 @@ class Banana {
         }
       }
 
+      bananas.forEach(banana => banana.render())
       trees.forEach(tree => tree.render())
       user.render()
     }
@@ -236,11 +239,11 @@ class Car {
     }
     ctx.clearRect(0, 0, cw, ch)
     renderCanvas()
-    ban.render()
+    bananas.forEach(banana => banana.render())
     trees.forEach(tree => tree.render())
-    gameOverScreen()
     mario.src = 'images/mario-' + directions[cartDir] + '.png'
     ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
+    gameOverScreen()
 
     cartDir++
   }
@@ -273,7 +276,7 @@ class Car {
           this.x -= this.speed
       }
 
-      ban.render()
+      bananas.forEach(banana => banana.render())
       trees.forEach(tree => tree.render())
       this.render()
     }
@@ -308,7 +311,7 @@ window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
     if (gameOver) {
       gameOver = false
-      Banana.stop(ban)
+      bananas.forEach(banana => Banana.stop(banana))
       trees.forEach(tree => Tree.stop(tree))
       Car.stopSpinning(user)
       newGame()
