@@ -103,10 +103,10 @@ class Tree {
       this.h += 4
 
       if (this.side === 'right') {
-        this.x += 6
+        this.x += 6.6
       }
       else if (this.side === 'left') {
-        this.x -= 6
+        this.x -= 6.6
       }
 
       if (this.x >= 0) {
@@ -263,7 +263,7 @@ class Car {
     }, 16)
   }
 
-  static stop(car) {
+  static stop() {
     clearInterval(this.isRunning)
   }
 
@@ -273,7 +273,7 @@ class Car {
     }, 32)
   }
 
-  static stopSpinning(car) {
+  static stopSpinning() {
     clearInterval(this.isSpinning)
   }
 }
