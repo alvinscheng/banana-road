@@ -188,7 +188,7 @@ class Banana {
 
 class Car {
   constructor() {
-    this.direction = 'up'
+    this.direction = 'straight'
     this.speed = 10
     this.x = cw / 2
     this.y = ch - 175
@@ -197,15 +197,7 @@ class Car {
   }
 
   render() {
-    if (this.direction === 'left') {
-      mario.src = 'images/mario-left.png'
-    }
-    else if (this.direction === 'right') {
-      mario.src = 'images/mario-right.png'
-    }
-    else {
-      mario.src = 'images/mario-straight.png'
-    }
+    mario.src = 'images/mario-' + this.direction + '.png'
     ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
   }
 
@@ -325,5 +317,7 @@ window.addEventListener('keydown', function (event) {
 
 window.addEventListener('keyup', function (event) {
   moving = false
+  user.direction = 'straight'
+  user.render()
   Car.stop(user)
 })
