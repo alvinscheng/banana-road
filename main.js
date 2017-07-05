@@ -77,13 +77,14 @@ function startGame() {
 
 class Tree {
   constructor(side) {
+    this.side = side
     if (side === 'left') {
       this.x = cw / 2 - 10
     }
     else if (side === 'right') {
       this.x = cw / 2 + 50
     }
-    this.speed = 3
+    this.speed = 1
     this.y = ch / 5
     this.w = 40
     this.h = 40
@@ -91,6 +92,33 @@ class Tree {
 
   render() {
     ctx.drawImage(tree, this.x - this.w, this.y, this.w, this.h)
+  }
+
+  move() {
+    // if (gameOn) {
+    ctx.clearRect(0, 0, cw, ch)
+    renderCanvas()
+    this.y += this.speed
+    this.w += 4
+    this.h += 6
+    if (this.side === 'right') {
+      this.x += 15
+    }
+    else if (this.side === 'left') {
+      this.x -= 12
+    }
+
+    if (this.y <= ch) {
+      this.render()
+    }
+    user.render()
+    // }
+  }
+
+  static start(tree) {
+    setInterval(function () {
+      tree.move()
+    }, 20)
   }
 }
 
