@@ -36,12 +36,12 @@ function startScreen() {
   ctx.fillStyle = 'rgba(73, 80, 91, 0.7)'
   ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 2 - 50)
   ctx.restore()
-  ctx.font = '48px serif'
-  ctx.fillText('BANANA ROAD', 125, 165)
-  ctx.font = '24px serif'
-  ctx.fillText('Press SPACE to Start', 200, 200)
-  ctx.font = '16px serif'
-  ctx.fillText('Use the LEFT and RIGHT arrow keys to move', 145, 230)
+  ctx.font = '64px "Bangers", cursive'
+  ctx.fillText('BANANA ROAD', 150, 165)
+  ctx.font = '24px "Bangers", cursive'
+  ctx.fillText('Press SPACE to Start', 210, 200)
+  ctx.font = '16px "Oswald", sans-serif'
+  ctx.fillText('Use the LEFT and RIGHT arrow keys to move', 175, 230)
 
 }
 
@@ -50,24 +50,24 @@ function gameOverScreen() {
   ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
   ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 3 + 15)
   ctx.restore()
-  ctx.font = '48px serif'
-  ctx.fillText('GAME OVER', 155, 165)
-  ctx.font = '32px serif'
-  ctx.fillText('Score: ' + bananaCount, 240, 200)
-  ctx.font = '18px serif'
-  ctx.fillText('Press Space to Try Again', 210, 230)
+  ctx.font = '64px "Bangers", cursive'
+  ctx.fillText('GAME OVER', 165, 165)
+  ctx.font = '32px "Bangers", cursive'
+  ctx.fillText('Score: ' + bananaCount, 250, 200)
+  ctx.font = '18px "Oswald", sans-serif'
+  ctx.fillText('Press Space to Try Again', 215, 230)
 }
 
 function newGame() {
   renderCanvas()
   user = new Car()
+  user.render()
   trees = []
   bananas = []
   bananaCount = 0
   $bananaCount.textContent = bananaCount
   startBananas()
   startTrees()
-  user.render()
   startScreen()
 }
 
