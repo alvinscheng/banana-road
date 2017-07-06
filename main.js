@@ -170,7 +170,7 @@ class Banana {
     this.y = ch / 4
     this.w = 15
     this.h = 15
-    this.angle = Math.random() * 4
+    this.angle = Math.random() * 8
   }
 
   render() {
@@ -231,7 +231,7 @@ class Banana {
 class Car {
   constructor() {
     this.direction = 'straight'
-    this.speed = 10
+    this.speed = 12
     this.x = cw / 2
     this.y = ch - 200
     this.w = 125
@@ -271,11 +271,11 @@ class Car {
       ctx.clearRect(0, 0, cw, ch)
       renderCanvas()
 
-      if (this.x <= 0) {
-        this.x = 0
+      if (this.x <= this.w / 2) {
+        this.x = this.w / 2
       }
-      else if (this.x >= cw) {
-        this.x = cw
+      else if (this.x >= cw - this.w / 2) {
+        this.x = cw - this.w / 2
       }
 
       switch (this.direction) {
