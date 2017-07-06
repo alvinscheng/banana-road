@@ -93,6 +93,12 @@ function addTrees() {
   Tree.start(trees[trees.length - 1])
 }
 
+function addBananas() {
+  bananas.push(new Banana())
+  bananas.forEach(banana => banana.render())
+  Banana.start(bananas[bananas.length - 1])
+}
+
 class Tree {
   constructor(side) {
     this.side = side
@@ -184,6 +190,10 @@ class Banana {
       }
       else if (this.x < cw / 2) {
         this.x -= this.angle
+      }
+
+      if (this.y > user.y + user.h / 2 && bananas.length === 1) {
+        addBananas()
       }
 
       if (this.y > ch) {
