@@ -3,8 +3,9 @@ const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
 
-let ban, user
+let user
 let trees = []
+let bananas = []
 let gameOn = false
 let gameOver = false
 let moving = false
@@ -56,20 +57,24 @@ function gameOverScreen() {
 
 function newGame() {
   renderCanvas()
-  startBananas()
+  user = new Car()
   trees = []
-  startTrees()
+  bananas = []
   bananaCount = 0
   $bananaCount.textContent = bananaCount
-  user = new Car()
+  startBananas()
+  startTrees()
   user.render()
   startScreen()
 }
 
 function startBananas() {
-  ban = new Banana()
-  ban.render()
-  Banana.start(ban)
+  bananas.splice(0, 1)
+  bananas.push(new Banana())
+  bananas.forEach(banana => {
+    banana.render()
+    Banana.start(banana)
+  })
 }
 
 function startTrees() {
@@ -86,6 +91,12 @@ function addTrees() {
   trees.forEach(tree => tree.render())
   Tree.start(trees[trees.length - 2])
   Tree.start(trees[trees.length - 1])
+}
+
+function addBananas() {
+  bananas.push(new Banana())
+  bananas.forEach(banana => banana.render())
+  Banana.start(bananas[bananas.length - 1])
 }
 
 class Tree {
@@ -136,7 +147,7 @@ class Tree {
       }
 
       trees.forEach(tree => tree.render())
-      ban.render()
+      bananas.forEach(banana => banana.render())
       user.render()
     }
   }
@@ -159,7 +170,7 @@ class Banana {
     this.y = ch / 4
     this.w = 15
     this.h = 15
-    this.angle = Math.random() * 4
+    this.angle = Math.random() * 8
   }
 
   render() {
@@ -181,16 +192,47 @@ class Banana {
         this.x -= this.angle
       }
 
-      if (this.y <= ch) {
-        this.render()
+      if (bananaCount < 20) {
+        if (this.y > user.y + user.h / 2 && bananas.length === 1) {
+          addBananas()
+        }
       }
-      else {
+      else if (bananaCount >= 20 && bananaCount < 50) {
+        if (this.y > ch / 2 && bananas.length === 1) {
+          addBananas()
+        }
+        if (this.y > user.y + user.h && bananas.length === 2) {
+          addBananas()
+        }
+      }
+      else if (bananaCount >= 50) {
+        if (this.y > ch / 2 && bananas.length === 1) {
+          addBananas()
+        }
+        if (this.y > user.y + user.h / 3 && bananas.length === 2) {
+          addBananas()
+        }
+        if (this.y > user.y + user.h && bananas.length === 3) {
+          addBananas()
+        }
+      }
+
+      if (this.y > ch) {
         bananaCount++
         $bananaCount.textContent = bananaCount
-        Banana.stop(ban)
+        bananas.forEach(banana => Banana.stop(banana))
         startBananas()
       }
 
+      if (this.x < user.x + user.w / 2 && this.x + this.w >= user.x) {
+        if (this.y + this.h >= user.y + 2 * user.h / 3 && this.y + this.h / 2 <= user.y + user.h) {
+          gameOn = false
+          gameOver = true
+          Car.startSpinning(user)
+        }
+      }
+
+      bananas.forEach(banana => banana.render())
       trees.forEach(tree => tree.render())
       user.render()
     }
@@ -210,7 +252,7 @@ class Banana {
 class Car {
   constructor() {
     this.direction = 'straight'
-    this.speed = 10
+    this.speed = 12
     this.x = cw / 2
     this.y = ch - 200
     this.w = 125
@@ -228,11 +270,11 @@ class Car {
     }
     ctx.clearRect(0, 0, cw, ch)
     renderCanvas()
-    ban.render()
+    bananas.forEach(banana => banana.render())
     trees.forEach(tree => tree.render())
-    gameOverScreen()
     mario.src = 'images/mario-' + directions[cartDir] + '.png'
     ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
+    gameOverScreen()
 
     cartDir++
   }
@@ -250,11 +292,11 @@ class Car {
       ctx.clearRect(0, 0, cw, ch)
       renderCanvas()
 
-      if (this.x <= 0) {
-        this.x = 0
+      if (this.x <= this.w / 2) {
+        this.x = this.w / 2
       }
-      else if (this.x >= cw) {
-        this.x = cw
+      else if (this.x >= cw - this.w / 2) {
+        this.x = cw - this.w / 2
       }
 
       switch (this.direction) {
@@ -265,14 +307,7 @@ class Car {
           this.x -= this.speed
       }
 
-      if (this.x + this.w >= ban.x && this.x <= ban.x + ban.w) {
-        if (this.y + this.h >= ban.y + ban.h / 2 && this.y + 2 * this.h / 3 <= ban.y + ban.h) {
-          gameOn = false
-          gameOver = true
-          Car.startSpinning(user)
-        }
-      }
-      ban.render()
+      bananas.forEach(banana => banana.render())
       trees.forEach(tree => tree.render())
       this.render()
     }
@@ -307,7 +342,7 @@ window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
     if (gameOver) {
       gameOver = false
-      Banana.stop(ban)
+      bananas.forEach(banana => Banana.stop(banana))
       trees.forEach(tree => Tree.stop(tree))
       Car.stopSpinning(user)
       newGame()
