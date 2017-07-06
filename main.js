@@ -32,10 +32,9 @@ function renderCanvas() {
 }
 
 function startScreen() {
-  ctx.save()
   ctx.fillStyle = 'rgba(73, 80, 91, 0.7)'
   ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 2 - 50)
-  ctx.restore()
+  ctx.fillStyle = 'white'
   ctx.font = '64px "Bangers", cursive'
   ctx.fillText('BANANA ROAD', 150, 165)
   ctx.font = '24px "Bangers", cursive'
@@ -377,6 +376,5 @@ window.addEventListener('keydown', function (event) {
 window.addEventListener('keyup', function (event) {
   moving = false
   user.direction = 'straight'
-  user.render()
   Car.stop(user)
 })
