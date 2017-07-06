@@ -34,12 +34,15 @@ function renderCanvas() {
 function startScreen() {
   ctx.save()
   ctx.fillStyle = 'rgba(73, 80, 91, 0.7)'
-  ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 3 - 10)
+  ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 2 - 50)
   ctx.restore()
   ctx.font = '48px serif'
   ctx.fillText('BANANA ROAD', 125, 165)
   ctx.font = '24px serif'
-  ctx.fillText('Press Space to Start', 200, 200)
+  ctx.fillText('Press SPACE to Start', 200, 200)
+  ctx.font = '16px serif'
+  ctx.fillText('Use the LEFT and RIGHT arrow keys to move', 145, 230)
+
 }
 
 function gameOverScreen() {
