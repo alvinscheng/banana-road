@@ -197,11 +197,22 @@ class Banana {
           addBananas()
         }
       }
-      else if (bananaCount >= 20) {
+      else if (bananaCount >= 20 && bananaCount < 50) {
         if (this.y > ch / 2 && bananas.length === 1) {
           addBananas()
         }
         if (this.y > user.y + user.h && bananas.length === 2) {
+          addBananas()
+        }
+      }
+      else if (bananaCount >= 50) {
+        if (this.y > ch / 2 && bananas.length === 1) {
+          addBananas()
+        }
+        if (this.y > user.y + user.h / 3 && bananas.length === 2) {
+          addBananas()
+        }
+        if (this.y > user.y + user.h && bananas.length === 3) {
           addBananas()
         }
       }
