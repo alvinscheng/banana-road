@@ -192,8 +192,18 @@ class Banana {
         this.x -= this.angle
       }
 
-      if (this.y > user.y + user.h / 2 && bananas.length === 1) {
-        addBananas()
+      if (bananaCount < 20) {
+        if (this.y > user.y + user.h / 2 && bananas.length === 1) {
+          addBananas()
+        }
+      }
+      else if (bananaCount >= 20) {
+        if (this.y > ch / 2 && bananas.length === 1) {
+          addBananas()
+        }
+        if (this.y > user.y + user.h && bananas.length === 2) {
+          addBananas()
+        }
       }
 
       if (this.y > ch) {
