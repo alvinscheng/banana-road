@@ -1,6 +1,8 @@
 #score {
   position: absolute;
   color: white;
-  left: 525px;
+  left: 520px;
   top: 20px;
+  font-family: "Bangers", cursive;
+  font-size: 20px;
 }
