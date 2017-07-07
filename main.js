@@ -26,6 +26,7 @@ banana.src = 'images/banana.png'
 const tree = new Image()
 tree.src = 'images/tree.png'
 
+const $mainMenuMusic = document.querySelector('#main-menu-audio')
 const $gameMusic = document.querySelector('#game-audio')
 const $gameOverAudio = document.querySelector('#game-over-audio')
 
@@ -61,6 +62,7 @@ function gameOverScreen() {
 }
 
 function newGame() {
+  startAudio($mainMenuMusic)
   renderCanvas()
   user = new Car()
   user.render()
@@ -355,6 +357,7 @@ window.addEventListener('load', () => {
 window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
     if (gameOver) {
+      $gameOverAudio.pause()
       gameOver = false
       bananas.forEach(banana => Banana.stop(banana))
       trees.forEach(tree => Tree.stop(tree))
@@ -363,7 +366,7 @@ window.addEventListener('keydown', function (event) {
     }
     else {
       gameOn = true
-      $gameOverAudio.pause()
+      $mainMenuMusic.pause()
       startAudio($gameMusic)
     }
   }
