@@ -226,8 +226,8 @@ class Banana {
         startBananas()
       }
 
-      if (this.x < user.x + 60 && this.x + this.w >= user.x) {
-        if (this.y + this.h >= user.y + 3 * user.h / 4 && this.y + this.h / 2 <= user.y + user.h) {
+      if (this.x < user.x + 60 && this.x + this.w >= user.x + 5) {
+        if (this.y + this.h >= user.y + 3 * user.h / 4 && this.y + this.h / 2 <= user.y + user.h - 5) {
           gameOn = false
           gameOver = true
           Car.startSpinning(user)
