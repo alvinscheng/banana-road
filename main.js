@@ -26,6 +26,9 @@ banana.src = 'images/banana.png'
 const tree = new Image()
 tree.src = 'images/tree.png'
 
+const $gameMusic = document.querySelector('#game-audio')
+const $gameOverAudio = document.querySelector('#game-over-audio')
+
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
   ctx.drawImage(background, 0, 0, cw, ch)
@@ -228,8 +231,11 @@ class Banana {
 
       if (this.x < user.x + 60 && this.x + this.w >= user.x + 5) {
         if (this.y + this.h >= user.y + 3 * user.h / 4 && this.y + this.h / 2 <= user.y + user.h - 5) {
+          $gameOverAudio.play()
           gameOn = false
           gameOver = true
+          $gameMusic.pause()
+          $gameMusic.currentTime = 0
           Car.startSpinning(user)
         }
       }
@@ -351,6 +357,7 @@ window.addEventListener('keydown', function (event) {
     }
     else {
       gameOn = true
+      $gameMusic.play()
     }
   }
   if (gameOn === true) {
