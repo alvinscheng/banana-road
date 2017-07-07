@@ -73,6 +73,11 @@ function newGame() {
   startScreen()
 }
 
+function startAudio(audio) {
+  audio.currentTime = 0
+  audio.play()
+}
+
 function startBananas() {
   bananas.splice(0, 1)
   bananas.push(new Banana())
@@ -231,11 +236,12 @@ class Banana {
 
       if (this.x < user.x + 60 && this.x + this.w >= user.x + 5) {
         if (this.y + this.h >= user.y + 3 * user.h / 4 && this.y + this.h / 2 <= user.y + user.h - 5) {
+          // startAudio($gameOverAudio)
+          $gameOverAudio.currentTime = 0.5
           $gameOverAudio.play()
           gameOn = false
           gameOver = true
           $gameMusic.pause()
-          $gameMusic.currentTime = 0
           Car.startSpinning(user)
         }
       }
@@ -357,7 +363,8 @@ window.addEventListener('keydown', function (event) {
     }
     else {
       gameOn = true
-      $gameMusic.play()
+      $gameOverAudio.pause()
+      startAudio($gameMusic)
     }
   }
   if (gameOn === true) {
