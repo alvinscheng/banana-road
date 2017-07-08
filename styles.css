@@ -6,3 +6,10 @@
   font-family: "Bangers", cursive;
   font-size: 20px;
 }
+
+#sound {
+  position: absolute;
+  left: 490px;
+  top: 22px;
+  height: 18px;
+}
