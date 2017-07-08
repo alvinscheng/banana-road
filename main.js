@@ -29,6 +29,16 @@ tree.src = 'images/tree.png'
 const $mainMenuMusic = document.querySelector('#main-menu-audio')
 const $gameMusic = document.querySelector('#game-audio')
 const $gameOverAudio = document.querySelector('#game-over-audio')
+const $muteButton = document.querySelector('#mute')
+
+$muteButton.addEventListener('click', () => {
+  if ($muteButton.src.endsWith('sound-on.png')) {
+    $muteButton.src = 'images/sound-off.png'
+  }
+  else {
+    $muteButton.src = 'images/sound-on.png'
+  }
+})
 
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
