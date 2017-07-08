@@ -30,13 +30,20 @@ const $mainMenuMusic = document.querySelector('#main-menu-audio')
 const $gameMusic = document.querySelector('#game-audio')
 const $gameOverAudio = document.querySelector('#game-over-audio')
 const $muteButton = document.querySelector('#mute')
+const sounds = [$mainMenuMusic, $gameMusic, $gameOverAudio]
 
 $muteButton.addEventListener('click', () => {
   if ($muteButton.src.endsWith('sound-on.png')) {
     $muteButton.src = 'images/sound-off.png'
+    sounds.forEach(sound => {
+      sound.muted = true
+    })
   }
   else {
     $muteButton.src = 'images/sound-on.png'
+    sounds.forEach(sound => {
+      sound.muted = false
+    })
   }
 })
 
