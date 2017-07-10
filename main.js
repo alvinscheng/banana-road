@@ -26,6 +26,27 @@ banana.src = 'images/banana.png'
 const tree = new Image()
 tree.src = 'images/tree.png'
 
+const $mainMenuMusic = document.querySelector('#main-menu-audio')
+const $gameMusic = document.querySelector('#game-audio')
+const $gameOverAudio = document.querySelector('#game-over-audio')
+const $muteButton = document.querySelector('#mute')
+const sounds = [$mainMenuMusic, $gameMusic, $gameOverAudio]
+
+$muteButton.addEventListener('click', () => {
+  if ($muteButton.src.endsWith('sound-on.png')) {
+    $muteButton.src = 'images/sound-off.png'
+    sounds.forEach(sound => {
+      sound.muted = true
+    })
+  }
+  else {
+    $muteButton.src = 'images/sound-on.png'
+    sounds.forEach(sound => {
+      sound.muted = false
+    })
+  }
+})
+
 function renderCanvas() {
   ctx.fillStyle = '#ecf0f1'
   ctx.drawImage(background, 0, 0, cw, ch)
@@ -58,6 +79,7 @@ function gameOverScreen() {
 }
 
 function newGame() {
+  startAudio($mainMenuMusic)
   renderCanvas()
   user = new Car()
   user.render()
@@ -68,6 +90,11 @@ function newGame() {
   startBananas()
   startTrees()
   startScreen()
+}
+
+function startAudio(audio) {
+  audio.currentTime = 0
+  audio.play()
 }
 
 function startBananas() {
@@ -228,8 +255,12 @@ class Banana {
 
       if (this.x < user.x + 60 && this.x + this.w >= user.x + 5) {
         if (this.y + this.h >= user.y + 3 * user.h / 4 && this.y + this.h / 2 <= user.y + user.h - 5) {
+          // startAudio($gameOverAudio)
+          $gameOverAudio.currentTime = 0.5
+          $gameOverAudio.play()
           gameOn = false
           gameOver = true
+          $gameMusic.pause()
           Car.startSpinning(user)
         }
       }
@@ -343,6 +374,7 @@ window.addEventListener('load', () => {
 window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
     if (gameOver) {
+      $gameOverAudio.pause()
       gameOver = false
       bananas.forEach(banana => Banana.stop(banana))
       trees.forEach(tree => Tree.stop(tree))
@@ -351,6 +383,8 @@ window.addEventListener('keydown', function (event) {
     }
     else {
       gameOn = true
+      $mainMenuMusic.pause()
+      startAudio($gameMusic)
     }
   }
   if (gameOn === true) {
