@@ -11,7 +11,6 @@ app.use(express.static('public'))
 app.use(bodyParser.json())
 
 app.post('/scores', (req, res) => {
-  console.log(req.body)
   knex
     .insert(req.body)
     .into('high_scores')

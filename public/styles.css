@@ -17,3 +17,16 @@
 .hidden {
   display: none;
 }
+
+#send-score {
+  position: absolute;
+  top: 244px;
+  left: 270px;
+}
+
+#username {
+  width: 65px;
+  height: 15px;
+  background-color: rgba(0, 0, 0, 0);
+  border-style: none;
+}

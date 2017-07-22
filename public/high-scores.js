@@ -10,7 +10,6 @@ $sendScore.addEventListener('submit', () => {
   post('/scores', JSON.stringify(data), { 'Content-Type': 'application/json' })
     .then(() => {
       $sendScore.reset()
-      console.log('sent!')
     })
 })
 
