@@ -13,3 +13,7 @@
   top: 22px;
   height: 18px;
 }
+
+.hidden {
+  display: none;
+}

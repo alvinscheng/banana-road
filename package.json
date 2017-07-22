@@ -24,6 +24,7 @@
     "stylelint-config-standard": "16.0.0"
   },
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "knex": "^0.13.0",
     "pg": "^7.0.2"

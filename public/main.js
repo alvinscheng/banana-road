@@ -1,4 +1,6 @@
 const $canvas = document.querySelector('#canvas')
+const $sendScore = document.querySelector('#send-score')
+
 const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
@@ -62,7 +64,7 @@ function startScreen() {
   ctx.fillText('Press SPACE to Start', 210, 200)
   ctx.font = '16px "Oswald", sans-serif'
   ctx.fillText('Use the LEFT and RIGHT arrow keys to move', 175, 230)
-
+  $sendScore.classList.add('hidden')
 }
 
 function gameOverScreen() {
@@ -76,6 +78,7 @@ function gameOverScreen() {
   ctx.fillText('Score: ' + bananaCount, 250, 200)
   ctx.font = '18px "Oswald", sans-serif'
   ctx.fillText('Press Space to Try Again', 215, 230)
+  $sendScore.classList.remove('hidden')
 }
 
 function newGame() {
