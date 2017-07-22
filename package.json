@@ -22,5 +22,10 @@
     "npm-run-all": "4.0.2",
     "stylelint": "7.10.1",
     "stylelint-config-standard": "16.0.0"
+  },
+  "dependencies": {
+    "express": "^4.15.3",
+    "knex": "^0.13.0",
+    "pg": "^7.0.2"
   }
 }
