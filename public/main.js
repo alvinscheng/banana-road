@@ -1,5 +1,6 @@
 const $canvas = document.querySelector('#canvas')
 const $sendScore = document.querySelector('#send-score')
+const $username = document.querySelector('#username')
 
 const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
@@ -303,6 +304,9 @@ class Car {
   }
 
   spin() {
+    if ($username !== document.activeElement) {
+      $username.select()
+    }
     if (cartDir > 7) {
       cartDir = 0
     }
@@ -379,6 +383,7 @@ window.addEventListener('load', () => {
 window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
     if (gameOver) {
+      submitScore()
       $gameOverAudio.pause()
       gameOver = false
       bananas.forEach(banana => Banana.stop(banana))
@@ -417,3 +422,22 @@ window.addEventListener('keyup', function (event) {
   user.direction = 'straight'
   Car.stop(user)
 })
+
+function submitScore() {
+  const data = {
+    score: bananaCount,
+    username: $username.value
+  }
+  post('/scores', JSON.stringify(data), { 'Content-Type': 'application/json' })
+    .then(() => {
+      $sendScore.reset()
+    })
+}
+
+function post(path, data, header) {
+  return fetch(path, {
+    method: 'POST',
+    headers: header,
+    body: data
+  })
+}
