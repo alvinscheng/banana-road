@@ -12,6 +12,7 @@ let bananas = []
 let gameOn = false
 let gameOver = false
 let moving = false
+let top10 = false
 
 const directions = ['straight', 'right', '270', '225', '180', '135', '90', 'left']
 let cartDir = 2
@@ -81,7 +82,6 @@ function gameOverScreen() {
   ctx.fillText('Please Enter Your Name', 215, 208)
   ctx.font = '18px "Oswald", sans-serif'
   ctx.fillText('Press Space to Try Again', 215, 265)
-  $sendScore.classList.remove('hidden')
 }
 
 function newGame() {
@@ -271,9 +271,13 @@ class Banana {
           getTop10()
             .then(res => res.json())
             .then(scores => {
-              scores.forEach(score => {
-                console.log(score)
-              })
+              if (scores.length < 10 || bananaCount > scores[9].score) {
+                $sendScore.classList.remove('hidden')
+                top10 = true
+              }
+              // scores.forEach(score => {
+              //   console.log(score)
+              // })
             })
         }
       }
@@ -390,7 +394,10 @@ window.addEventListener('load', () => {
 window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
     if (gameOver) {
-      submitScore()
+      if (top10) {
+        submitScore()
+        top10 = false
+      }
       $gameOverAudio.pause()
       gameOver = false
       bananas.forEach(banana => Banana.stop(banana))
@@ -436,9 +443,6 @@ function submitScore() {
     username: $username.value
   }
   post('/scores', JSON.stringify(data), { 'Content-Type': 'application/json' })
-    .then(() => {
-      $sendScore.reset()
-    })
 }
 
 function post(path, data, header) {
