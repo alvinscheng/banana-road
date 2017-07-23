@@ -20,9 +20,9 @@ app.post('/scores', (req, res) => {
 })
 
 app.get('/scores', (req, res) => {
-  knex
-    .select('*')
-    .from('high_scores')
+  knex('high_scores')
+    .orderBy('score', 'desc')
+    .limit(10)
     .then(scores => res.json(scores))
 })
 
