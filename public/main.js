@@ -268,6 +268,13 @@ class Banana {
           gameOver = true
           $gameMusic.pause()
           Car.startSpinning(user)
+          getTop10()
+            .then(res => res.json())
+            .then(scores => {
+              scores.forEach(score => {
+                console.log(score)
+              })
+            })
         }
       }
 
@@ -440,4 +447,8 @@ function post(path, data, header) {
     headers: header,
     body: data
   })
+}
+
+function getTop10() {
+  return fetch('/scores')
 }
