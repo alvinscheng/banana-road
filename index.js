@@ -11,13 +11,19 @@ app.use(express.static('public'))
 app.use(bodyParser.json())
 
 app.post('/scores', (req, res) => {
-  console.log(req.body)
   knex
     .insert(req.body)
     .into('high_scores')
     .returning('*')
     .then(updated => updated[0])
     .then(() => res.sendStatus(201))
+})
+
+app.get('/scores', (req, res) => {
+  knex
+    .select('*')
+    .from('high_scores')
+    .then(scores => res.json(scores))
 })
 
 app.listen(3000, console.log('Listening on 3000...'))
