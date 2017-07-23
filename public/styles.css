@@ -20,13 +20,21 @@
 
 #send-score {
   position: absolute;
-  top: 244px;
-  left: 270px;
+  top: 225px;
+  left: 282px;
 }
 
 #username {
   width: 65px;
-  height: 15px;
+  height: 25px;
   background-color: rgba(0, 0, 0, 0);
   border-style: none;
+  font-size: 35px;
+  color: white;
+  font-family: bangers;
+  text-transform: uppercase;
+}
+
+*:focus {
+  outline: none;
 }
