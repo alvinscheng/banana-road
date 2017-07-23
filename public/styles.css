@@ -1,0 +1,40 @@
+#score {
+  position: absolute;
+  color: white;
+  left: 520px;
+  top: 20px;
+  font-family: "Bangers", cursive;
+  font-size: 20px;
+}
+
+#mute {
+  position: absolute;
+  left: 490px;
+  top: 22px;
+  height: 18px;
+}
+
+.hidden {
+  display: none;
+}
+
+#send-score {
+  position: absolute;
+  top: 225px;
+  left: 282px;
+}
+
+#username {
+  width: 65px;
+  height: 25px;
+  background-color: rgba(0, 0, 0, 0);
+  border-style: none;
+  font-size: 35px;
+  color: white;
+  font-family: bangers;
+  text-transform: uppercase;
+}
+
+*:focus {
+  outline: none;
+}

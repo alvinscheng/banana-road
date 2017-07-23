@@ -1,4 +1,7 @@
 const $canvas = document.querySelector('#canvas')
+const $sendScore = document.querySelector('#send-score')
+const $username = document.querySelector('#username')
+
 const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
 const ch = $canvas.height
@@ -62,20 +65,23 @@ function startScreen() {
   ctx.fillText('Press SPACE to Start', 210, 200)
   ctx.font = '16px "Oswald", sans-serif'
   ctx.fillText('Use the LEFT and RIGHT arrow keys to move', 175, 230)
-
+  $sendScore.classList.add('hidden')
 }
 
 function gameOverScreen() {
   ctx.save()
   ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
-  ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 3 + 15)
+  ctx.fillRect(cw / 6, ch / 4 - 20, 2 * cw / 3, ch / 2)
   ctx.restore()
   ctx.font = '64px "Bangers", cursive'
-  ctx.fillText('GAME OVER', 165, 165)
+  ctx.fillText('GAME OVER', 165, 145)
   ctx.font = '32px "Bangers", cursive'
-  ctx.fillText('Score: ' + bananaCount, 250, 200)
+  ctx.fillText('Score: ' + bananaCount, 250, 180)
+  ctx.font = '20px "Bangers", sans-serif'
+  ctx.fillText('Please Enter Your Name', 215, 208)
   ctx.font = '18px "Oswald", sans-serif'
-  ctx.fillText('Press Space to Try Again', 215, 230)
+  ctx.fillText('Press Space to Try Again', 215, 265)
+  $sendScore.classList.remove('hidden')
 }
 
 function newGame() {
@@ -298,6 +304,9 @@ class Car {
   }
 
   spin() {
+    if ($username !== document.activeElement) {
+      $username.select()
+    }
     if (cartDir > 7) {
       cartDir = 0
     }
@@ -374,6 +383,7 @@ window.addEventListener('load', () => {
 window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
     if (gameOver) {
+      submitScore()
       $gameOverAudio.pause()
       gameOver = false
       bananas.forEach(banana => Banana.stop(banana))
@@ -412,3 +422,22 @@ window.addEventListener('keyup', function (event) {
   user.direction = 'straight'
   Car.stop(user)
 })
+
+function submitScore() {
+  const data = {
+    score: bananaCount,
+    username: $username.value
+  }
+  post('/scores', JSON.stringify(data), { 'Content-Type': 'application/json' })
+    .then(() => {
+      $sendScore.reset()
+    })
+}
+
+function post(path, data, header) {
+  return fetch(path, {
+    method: 'POST',
+    headers: header,
+    body: data
+  })
+}
