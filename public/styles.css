@@ -38,3 +38,21 @@
 *:focus {
   outline: none;
 }
+
+#leaderboard {
+  position: absolute;
+  top: 135px;
+  color: white;
+  left: 152px;
+  display: flex;
+  font-size: 20px;
+  font-family: bangers;
+}
+
+#next5 {
+  margin: 0 45px;
+}
+
+td {
+  padding: 0 20px;
+}

@@ -1,6 +1,7 @@
 const $canvas = document.querySelector('#canvas')
 const $sendScore = document.querySelector('#send-score')
 const $username = document.querySelector('#username')
+// const $leaderboard = document.querySelector('#leaderboard')
 
 const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
@@ -69,19 +70,30 @@ function startScreen() {
   $sendScore.classList.add('hidden')
 }
 
+// function gameOverScreen() {
+//   ctx.save()
+//   ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
+//   ctx.fillRect(cw / 6, ch / 4 - 20, 2 * cw / 3, ch / 2)
+//   ctx.restore()
+//   ctx.font = '64px "Bangers", cursive'
+//   ctx.fillText('GAME OVER', 165, 145)
+//   ctx.font = '32px "Bangers", cursive'
+//   ctx.fillText('Score: ' + bananaCount, 250, 180)
+//   ctx.font = '20px "Bangers", sans-serif'
+//   ctx.fillText('Please Enter Your Name', 215, 208)
+//   ctx.font = '18px "Oswald", sans-serif'
+//   ctx.fillText('Press Space to Try Again', 215, 265)
+// }
+
 function gameOverScreen() {
   ctx.save()
   ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
   ctx.fillRect(cw / 6, ch / 4 - 20, 2 * cw / 3, ch / 2)
   ctx.restore()
-  ctx.font = '64px "Bangers", cursive'
-  ctx.fillText('GAME OVER', 165, 145)
-  ctx.font = '32px "Bangers", cursive'
-  ctx.fillText('Score: ' + bananaCount, 250, 180)
-  ctx.font = '20px "Bangers", sans-serif'
-  ctx.fillText('Please Enter Your Name', 215, 208)
+  ctx.font = '36px "Bangers", cursive'
+  ctx.fillText('Leaderboard', 215, 117)
   ctx.font = '18px "Oswald", sans-serif'
-  ctx.fillText('Press Space to Try Again', 215, 265)
+  ctx.fillText('Press Space', 263, 270)
 }
 
 function newGame() {
