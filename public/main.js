@@ -1,7 +1,7 @@
 const $canvas = document.querySelector('#canvas')
 const $sendScore = document.querySelector('#send-score')
 const $username = document.querySelector('#username')
-// const $leaderboard = document.querySelector('#leaderboard')
+const $leaderboard = document.querySelector('#leaderboard')
 
 const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
@@ -57,35 +57,53 @@ function renderCanvas() {
   ctx.drawImage(background, 0, 0, cw, ch)
 }
 
-function startScreen() {
-  ctx.fillStyle = 'rgba(73, 80, 91, 0.7)'
-  ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 2 - 50)
-  ctx.fillStyle = 'white'
-  ctx.font = '64px "Bangers", cursive'
-  ctx.fillText('BANANA ROAD', 150, 165)
-  ctx.font = '24px "Bangers", cursive'
-  ctx.fillText('Press SPACE to Start', 210, 200)
-  ctx.font = '16px "Oswald", sans-serif'
-  ctx.fillText('Use the LEFT and RIGHT arrow keys to move', 175, 230)
-  $sendScore.classList.add('hidden')
-}
-
-// function gameOverScreen() {
-//   ctx.save()
-//   ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
-//   ctx.fillRect(cw / 6, ch / 4 - 20, 2 * cw / 3, ch / 2)
-//   ctx.restore()
+// function startScreen() {
+//   ctx.fillStyle = 'rgba(73, 80, 91, 0.7)'
+//   ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 2 - 50)
+//   ctx.fillStyle = 'white'
 //   ctx.font = '64px "Bangers", cursive'
-//   ctx.fillText('GAME OVER', 165, 145)
-//   ctx.font = '32px "Bangers", cursive'
-//   ctx.fillText('Score: ' + bananaCount, 250, 180)
-//   ctx.font = '20px "Bangers", sans-serif'
-//   ctx.fillText('Please Enter Your Name', 215, 208)
-//   ctx.font = '18px "Oswald", sans-serif'
-//   ctx.fillText('Press Space to Try Again', 215, 265)
+//   ctx.fillText('BANANA ROAD', 150, 165)
+//   ctx.font = '24px "Bangers", cursive'
+//   ctx.fillText('Press SPACE to Start', 210, 200)
+//   ctx.font = '16px "Oswald", sans-serif'
+//   ctx.fillText('Use the LEFT and RIGHT arrow keys to move', 175, 230)
+//   $sendScore.classList.add('hidden')
 // }
 
 function gameOverScreen() {
+  ctx.save()
+  ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
+  ctx.fillRect(cw / 6, ch / 4 - 20, 2 * cw / 3, ch / 2)
+  ctx.restore()
+  ctx.font = '64px "Bangers", cursive'
+  ctx.fillText('GAME OVER', 165, 145)
+  ctx.font = '32px "Bangers", cursive'
+  ctx.fillText('Score: ' + bananaCount, 250, 180)
+  ctx.font = '20px "Bangers", sans-serif'
+  ctx.fillText('Please Enter Your Name', 215, 208)
+  ctx.font = '18px "Oswald", sans-serif'
+  ctx.fillText('Press Space to Try Again', 215, 265)
+}
+
+function startScreen() {
+  $leaderboard.classList.remove('hidden')
+  getTop10()
+    .then(res => res.json())
+    .then(scores => {
+      const $top5 = document.querySelector('#top5')
+      const $next5 = document.querySelector('#next5')
+      const $scores = scores.map(score => renderScore(score))
+      for (let i = 0; i < 5; i++) {
+        if ($scores[i]) {
+          $top5.appendChild($scores[i])
+        }
+      }
+      for (let i = 5; i < 10; i++) {
+        if ($scores[i]) {
+          $next5.appendChild($scores[i])
+        }
+      }
+    })
   ctx.save()
   ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
   ctx.fillRect(cw / 6, ch / 4 - 20, 2 * cw / 3, ch / 2)
@@ -287,9 +305,6 @@ class Banana {
                 $sendScore.classList.remove('hidden')
                 top10 = true
               }
-              // scores.forEach(score => {
-              //   console.log(score)
-              // })
             })
         }
       }
@@ -467,4 +482,15 @@ function post(path, data, header) {
 
 function getTop10() {
   return fetch('/scores')
+}
+
+function renderScore(data) {
+  const $row = document.createElement('tr')
+  const $score = document.createElement('td')
+  const $name = document.createElement('td')
+  $score.textContent = data.score
+  $name.textContent = data.username
+  $row.appendChild($score)
+  $row.appendChild($name)
+  return $row
 }
