@@ -14,6 +14,7 @@ let gameOn = false
 let gameOver = false
 let moving = false
 let top10 = false
+let isLeaderboard = false
 
 const directions = ['straight', 'right', '270', '225', '180', '135', '90', 'left']
 let cartDir = 2
@@ -57,18 +58,17 @@ function renderCanvas() {
   ctx.drawImage(background, 0, 0, cw, ch)
 }
 
-// function startScreen() {
-//   ctx.fillStyle = 'rgba(73, 80, 91, 0.7)'
-//   ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 2 - 50)
-//   ctx.fillStyle = 'white'
-//   ctx.font = '64px "Bangers", cursive'
-//   ctx.fillText('BANANA ROAD', 150, 165)
-//   ctx.font = '24px "Bangers", cursive'
-//   ctx.fillText('Press SPACE to Start', 210, 200)
-//   ctx.font = '16px "Oswald", sans-serif'
-//   ctx.fillText('Use the LEFT and RIGHT arrow keys to move', 175, 230)
-//   $sendScore.classList.add('hidden')
-// }
+function startScreen() {
+  ctx.fillStyle = 'rgba(73, 80, 91, 0.7)'
+  ctx.fillRect(cw / 6, ch / 4, 2 * cw / 3, ch / 2 - 50)
+  ctx.fillStyle = 'white'
+  ctx.font = '64px "Bangers", cursive'
+  ctx.fillText('BANANA ROAD', 150, 165)
+  ctx.font = '24px "Bangers", cursive'
+  ctx.fillText('Press SPACE to Start', 210, 200)
+  ctx.font = '16px "Oswald", sans-serif'
+  ctx.fillText('Use the LEFT and RIGHT arrow keys to move', 175, 230)
+}
 
 function gameOverScreen() {
   ctx.save()
@@ -85,25 +85,7 @@ function gameOverScreen() {
   ctx.fillText('Press Space to Try Again', 215, 265)
 }
 
-function startScreen() {
-  $leaderboard.classList.remove('hidden')
-  getTop10()
-    .then(res => res.json())
-    .then(scores => {
-      const $top5 = document.querySelector('#top5')
-      const $next5 = document.querySelector('#next5')
-      const $scores = scores.map(score => renderScore(score))
-      for (let i = 0; i < 5; i++) {
-        if ($scores[i]) {
-          $top5.appendChild($scores[i])
-        }
-      }
-      for (let i = 5; i < 10; i++) {
-        if ($scores[i]) {
-          $next5.appendChild($scores[i])
-        }
-      }
-    })
+function leaderboardScreen() {
   ctx.save()
   ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
   ctx.fillRect(cw / 6, ch / 4 - 20, 2 * cw / 3, ch / 2)
@@ -115,6 +97,7 @@ function startScreen() {
 }
 
 function newGame() {
+  $leaderboard.classList.add('hidden')
   startAudio($mainMenuMusic)
   renderCanvas()
   user = new Car()
@@ -291,7 +274,6 @@ class Banana {
 
       if (this.x < user.x + 60 && this.x + this.w >= user.x + 5) {
         if (this.y + this.h >= user.y + 3 * user.h / 4 && this.y + this.h / 2 <= user.y + user.h - 5) {
-          // startAudio($gameOverAudio)
           $gameOverAudio.currentTime = 0.5
           $gameOverAudio.play()
           gameOn = false
@@ -354,7 +336,13 @@ class Car {
     trees.forEach(tree => tree.render())
     mario.src = 'images/mario-' + directions[cartDir] + '.png'
     ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
-    gameOverScreen()
+
+    if (!isLeaderboard) {
+      gameOverScreen()
+    }
+    else {
+      leaderboardScreen()
+    }
 
     cartDir++
   }
@@ -421,16 +409,40 @@ window.addEventListener('load', () => {
 window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
     if (gameOver) {
+      $sendScore.classList.add('hidden')
       if (top10) {
         submitScore()
         top10 = false
       }
-      $gameOverAudio.pause()
-      gameOver = false
-      bananas.forEach(banana => Banana.stop(banana))
-      trees.forEach(tree => Tree.stop(tree))
-      Car.stopSpinning(user)
-      newGame()
+      if (!isLeaderboard) {
+        isLeaderboard = true
+        $leaderboard.classList.remove('hidden')
+        getTop10()
+          .then(res => res.json())
+          .then(scores => {
+            const $top5 = document.querySelector('#top5')
+            const $next5 = document.querySelector('#next5')
+            const $scores = scores.map(score => renderScore(score))
+            for (let i = 0; i < 5; i++) {
+              if ($scores[i]) {
+                $top5.appendChild($scores[i])
+              }
+            }
+            for (let i = 5; i < 10; i++) {
+              if ($scores[i]) {
+                $next5.appendChild($scores[i])
+              }
+            }
+          })
+      }
+      else {
+        $gameOverAudio.pause()
+        gameOver = false
+        bananas.forEach(banana => Banana.stop(banana))
+        trees.forEach(tree => Tree.stop(tree))
+        Car.stopSpinning(user)
+        newGame()
+      }
     }
     else {
       gameOn = true
