@@ -18,6 +18,10 @@
   display: none;
 }
 
+.flex {
+  display: flex;
+}
+
 #send-score {
   position: absolute;
   top: 225px;
@@ -37,4 +41,21 @@
 
 *:focus {
   outline: none;
+}
+
+#leaderboard {
+  position: absolute;
+  top: 135px;
+  color: white;
+  left: 152px;
+  font-size: 20px;
+  font-family: bangers;
+}
+
+#next5 {
+  margin: 0 45px;
+}
+
+td {
+  padding: 0 20px;
 }

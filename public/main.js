@@ -1,6 +1,7 @@
 const $canvas = document.querySelector('#canvas')
 const $sendScore = document.querySelector('#send-score')
 const $username = document.querySelector('#username')
+const $leaderboard = document.querySelector('#leaderboard')
 
 const ctx = $canvas.getContext('2d')
 const cw = $canvas.width
@@ -12,6 +13,8 @@ let bananas = []
 let gameOn = false
 let gameOver = false
 let moving = false
+let top10 = false
+let isLeaderboard = false
 
 const directions = ['straight', 'right', '270', '225', '180', '135', '90', 'left']
 let cartDir = 2
@@ -65,10 +68,9 @@ function startScreen() {
   ctx.fillText('Press SPACE to Start', 210, 200)
   ctx.font = '16px "Oswald", sans-serif'
   ctx.fillText('Use the LEFT and RIGHT arrow keys to move', 175, 230)
-  $sendScore.classList.add('hidden')
 }
 
-function gameOverScreen() {
+function gameOverScreen1() {
   ctx.save()
   ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
   ctx.fillRect(cw / 6, ch / 4 - 20, 2 * cw / 3, ch / 2)
@@ -80,11 +82,36 @@ function gameOverScreen() {
   ctx.font = '20px "Bangers", sans-serif'
   ctx.fillText('Please Enter Your Name', 215, 208)
   ctx.font = '18px "Oswald", sans-serif'
-  ctx.fillText('Press Space to Try Again', 215, 265)
-  $sendScore.classList.remove('hidden')
+  ctx.fillText('Press Space', 263, 270)
+}
+
+function gameOverScreen2() {
+  ctx.save()
+  ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
+  ctx.fillRect(cw / 6, ch / 4 - 20, 2 * cw / 3, ch / 2)
+  ctx.restore()
+  ctx.font = '64px "Bangers", cursive'
+  ctx.fillText('GAME OVER', 165, 155)
+  ctx.font = '32px "Bangers", cursive'
+  ctx.fillText('Score: ' + bananaCount, 250, 200)
+  ctx.font = '18px "Oswald", sans-serif'
+  ctx.fillText('Press Space', 263, 255)
+}
+
+function leaderboardScreen() {
+  ctx.save()
+  ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
+  ctx.fillRect(cw / 6, ch / 4 - 20, 2 * cw / 3, ch / 2)
+  ctx.restore()
+  ctx.font = '36px "Bangers", cursive'
+  ctx.fillText('Leaderboard', 215, 117)
+  ctx.font = '18px "Oswald", sans-serif'
+  ctx.fillText('Press Space', 263, 270)
 }
 
 function newGame() {
+  $leaderboard.classList.add('hidden')
+  $leaderboard.classList.remove('flex')
   startAudio($mainMenuMusic)
   renderCanvas()
   user = new Car()
@@ -261,13 +288,20 @@ class Banana {
 
       if (this.x < user.x + 60 && this.x + this.w >= user.x + 5) {
         if (this.y + this.h >= user.y + 3 * user.h / 4 && this.y + this.h / 2 <= user.y + user.h - 5) {
-          // startAudio($gameOverAudio)
           $gameOverAudio.currentTime = 0.5
           $gameOverAudio.play()
           gameOn = false
           gameOver = true
           $gameMusic.pause()
-          Car.startSpinning(user)
+          getTop10()
+            .then(res => res.json())
+            .then(scores => {
+              if (scores.length < 10 || bananaCount > scores[9].score) {
+                $sendScore.classList.remove('hidden')
+                top10 = true
+              }
+              Car.startSpinning(user)
+            })
         }
       }
 
@@ -316,7 +350,18 @@ class Car {
     trees.forEach(tree => tree.render())
     mario.src = 'images/mario-' + directions[cartDir] + '.png'
     ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
-    gameOverScreen()
+
+    if (!isLeaderboard) {
+      if (top10) {
+        gameOverScreen1()
+      }
+      else {
+        gameOverScreen2()
+      }
+    }
+    else {
+      leaderboardScreen()
+    }
 
     cartDir++
   }
@@ -383,13 +428,28 @@ window.addEventListener('load', () => {
 window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
     if (gameOver) {
-      submitScore()
-      $gameOverAudio.pause()
-      gameOver = false
-      bananas.forEach(banana => Banana.stop(banana))
-      trees.forEach(tree => Tree.stop(tree))
-      Car.stopSpinning(user)
-      newGame()
+      $sendScore.classList.add('hidden')
+      if (!isLeaderboard) {
+        if (top10) {
+          top10 = false
+          submitScore()
+            .then(() => {
+              showLeaderboard()
+            })
+        }
+        else {
+          showLeaderboard()
+        }
+      }
+      else {
+        $gameOverAudio.pause()
+        isLeaderboard = false
+        gameOver = false
+        bananas.forEach(banana => Banana.stop(banana))
+        trees.forEach(tree => Tree.stop(tree))
+        Car.stopSpinning(user)
+        newGame()
+      }
     }
     else {
       gameOn = true
@@ -428,10 +488,7 @@ function submitScore() {
     score: bananaCount,
     username: $username.value
   }
-  post('/scores', JSON.stringify(data), { 'Content-Type': 'application/json' })
-    .then(() => {
-      $sendScore.reset()
-    })
+  return post('/scores', JSON.stringify(data), { 'Content-Type': 'application/json' })
 }
 
 function post(path, data, header) {
@@ -440,4 +497,46 @@ function post(path, data, header) {
     headers: header,
     body: data
   })
+}
+
+function getTop10() {
+  return fetch('/scores')
+}
+
+function renderScore(data) {
+  const $row = document.createElement('tr')
+  const $score = document.createElement('td')
+  const $name = document.createElement('td')
+  $score.textContent = data.score
+  $name.textContent = data.username
+  $row.appendChild($score)
+  $row.appendChild($name)
+  return $row
+}
+
+function showLeaderboard() {
+  getTop10()
+    .then(res => res.json())
+    .then(scores => {
+      const $top5 = document.querySelector('#top5')
+      const $next5 = document.querySelector('#next5')
+      const $scores = scores.map(score => renderScore(score))
+      $top5.innerHTML = ''
+      $next5.innerHTML = ''
+      for (let i = 0; i < 5; i++) {
+        if ($scores[i]) {
+          $top5.appendChild($scores[i])
+        }
+      }
+      for (let i = 5; i < 10; i++) {
+        if ($scores[i]) {
+          $next5.appendChild($scores[i])
+        }
+      }
+    })
+    .then(() => {
+      isLeaderboard = true
+      $leaderboard.classList.remove('hidden')
+      $leaderboard.classList.add('flex')
+    })
 }
