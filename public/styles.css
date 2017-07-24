@@ -18,6 +18,10 @@
   display: none;
 }
 
+.flex {
+  display: flex;
+}
+
 #send-score {
   position: absolute;
   top: 225px;
@@ -44,7 +48,6 @@
   top: 135px;
   color: white;
   left: 152px;
-  display: flex;
   font-size: 20px;
   font-family: bangers;
 }

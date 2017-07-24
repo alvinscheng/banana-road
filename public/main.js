@@ -98,6 +98,7 @@ function leaderboardScreen() {
 
 function newGame() {
   $leaderboard.classList.add('hidden')
+  $leaderboard.classList.remove('flex')
   startAudio($mainMenuMusic)
   renderCanvas()
   user = new Car()
@@ -410,33 +411,21 @@ window.addEventListener('keydown', function (event) {
   if (event.keyCode === 32) {
     if (gameOver) {
       $sendScore.classList.add('hidden')
-      if (top10) {
-        submitScore()
-        top10 = false
-      }
       if (!isLeaderboard) {
-        isLeaderboard = true
-        $leaderboard.classList.remove('hidden')
-        getTop10()
-          .then(res => res.json())
-          .then(scores => {
-            const $top5 = document.querySelector('#top5')
-            const $next5 = document.querySelector('#next5')
-            const $scores = scores.map(score => renderScore(score))
-            for (let i = 0; i < 5; i++) {
-              if ($scores[i]) {
-                $top5.appendChild($scores[i])
-              }
-            }
-            for (let i = 5; i < 10; i++) {
-              if ($scores[i]) {
-                $next5.appendChild($scores[i])
-              }
-            }
-          })
+        if (top10) {
+          top10 = false
+          submitScore()
+            .then(() => {
+              showLeaderboard()
+            })
+        }
+        else {
+          showLeaderboard()
+        }
       }
       else {
         $gameOverAudio.pause()
+        isLeaderboard = false
         gameOver = false
         bananas.forEach(banana => Banana.stop(banana))
         trees.forEach(tree => Tree.stop(tree))
@@ -481,7 +470,7 @@ function submitScore() {
     score: bananaCount,
     username: $username.value
   }
-  post('/scores', JSON.stringify(data), { 'Content-Type': 'application/json' })
+  return post('/scores', JSON.stringify(data), { 'Content-Type': 'application/json' })
 }
 
 function post(path, data, header) {
@@ -505,4 +494,31 @@ function renderScore(data) {
   $row.appendChild($score)
   $row.appendChild($name)
   return $row
+}
+
+function showLeaderboard() {
+  getTop10()
+    .then(res => res.json())
+    .then(scores => {
+      const $top5 = document.querySelector('#top5')
+      const $next5 = document.querySelector('#next5')
+      const $scores = scores.map(score => renderScore(score))
+      $top5.innerHTML = ''
+      $next5.innerHTML = ''
+      for (let i = 0; i < 5; i++) {
+        if ($scores[i]) {
+          $top5.appendChild($scores[i])
+        }
+      }
+      for (let i = 5; i < 10; i++) {
+        if ($scores[i]) {
+          $next5.appendChild($scores[i])
+        }
+      }
+    })
+    .then(() => {
+      isLeaderboard = true
+      $leaderboard.classList.remove('hidden')
+      $leaderboard.classList.add('flex')
+    })
 }
