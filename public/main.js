@@ -70,7 +70,7 @@ function startScreen() {
   ctx.fillText('Use the LEFT and RIGHT arrow keys to move', 175, 230)
 }
 
-function gameOverScreen() {
+function gameOverScreen1() {
   ctx.save()
   ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
   ctx.fillRect(cw / 6, ch / 4 - 20, 2 * cw / 3, ch / 2)
@@ -82,7 +82,20 @@ function gameOverScreen() {
   ctx.font = '20px "Bangers", sans-serif'
   ctx.fillText('Please Enter Your Name', 215, 208)
   ctx.font = '18px "Oswald", sans-serif'
-  ctx.fillText('Press Space to Try Again', 215, 265)
+  ctx.fillText('Press Space', 263, 270)
+}
+
+function gameOverScreen2() {
+  ctx.save()
+  ctx.fillStyle = 'rgba(73, 80, 91, 0.6)'
+  ctx.fillRect(cw / 6, ch / 4 - 20, 2 * cw / 3, ch / 2)
+  ctx.restore()
+  ctx.font = '64px "Bangers", cursive'
+  ctx.fillText('GAME OVER', 165, 155)
+  ctx.font = '32px "Bangers", cursive'
+  ctx.fillText('Score: ' + bananaCount, 250, 200)
+  ctx.font = '18px "Oswald", sans-serif'
+  ctx.fillText('Press Space', 263, 255)
 }
 
 function leaderboardScreen() {
@@ -280,7 +293,6 @@ class Banana {
           gameOn = false
           gameOver = true
           $gameMusic.pause()
-          Car.startSpinning(user)
           getTop10()
             .then(res => res.json())
             .then(scores => {
@@ -288,6 +300,7 @@ class Banana {
                 $sendScore.classList.remove('hidden')
                 top10 = true
               }
+              Car.startSpinning(user)
             })
         }
       }
@@ -339,7 +352,12 @@ class Car {
     ctx.drawImage(mario, this.x - this.w / 2, this.y, this.w, this.h)
 
     if (!isLeaderboard) {
-      gameOverScreen()
+      if (top10) {
+        gameOverScreen1()
+      }
+      else {
+        gameOverScreen2()
+      }
     }
     else {
       leaderboardScreen()
