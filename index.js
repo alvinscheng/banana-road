@@ -1,8 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const knex = require('knex')({
   dialect: 'pg',
-  connection: 'postgres://localhost:5432/banana-road'
+  connection: process.env.DATABASE_URL
 })
 
 const app = express()
@@ -26,4 +27,6 @@ app.get('/scores', (req, res) => {
     .then(scores => res.json(scores))
 })
 
-app.listen(3000, console.log('Listening on 3000...'))
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, console.log('Listening on ' + PORT))
