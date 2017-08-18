@@ -27,6 +27,7 @@
     "htmlhint": "0.9.13",
     "husky": "0.13.4",
     "npm-run-all": "4.0.2",
+    "pg-bump": "^1.0.4",
     "stylelint": "7.10.1",
     "stylelint-config-standard": "16.0.0"
   },
