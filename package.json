@@ -2,6 +2,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "start": "node index.js",
+    "db:make": "pg-bump create",
+    "db:up": "pg-bump up",
+    "db:down": "pg-bump down",
+    "db:status": "pg-bump status",
+    "db:rebuild": "pg-bump down && pg-bump up",
     "lint": "run-p lint:*",
     "lint:html": "htmlhint ./**/*.html",
     "lint:css": "stylelint ./**/*.css",
@@ -25,6 +31,7 @@
   },
   "dependencies": {
     "body-parser": "^1.17.2",
+    "dotenv": "^4.0.0",
     "express": "^4.15.3",
     "knex": "^0.13.0",
     "pg": "^7.0.2"
