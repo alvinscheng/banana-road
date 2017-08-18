@@ -13,7 +13,8 @@
     "lint:css": "stylelint ./**/*.css",
     "lint:js": "eslint ./**/*.js",
     "test": "npm run lint",
-    "precommit": "npm test"
+    "precommit": "npm test",
+    "heroku-postbuild": "pg-bump up"
   },
   "devDependencies": {
     "eslint": "3.19.0",
